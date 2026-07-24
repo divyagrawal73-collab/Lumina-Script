@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novel Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .hero {
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(168, 85, 247, 0.1) 0%, transparent 100%);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+    .search-container {
+      max-width: 480px;
+      margin: 2rem auto;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.25rem 1rem 3rem;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: var(--glass-blur);
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+      transition: all var(--transition-smooth);
+    }
+    .search-input:focus {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+    }
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.5;
+    }
+    .novel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .novel-card {
+      background: var(--bg-glass);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all var(--transition-smooth);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .novel-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+      border-color: var(--border-hover);
+    }
+    .novel-cover {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: var(--accent-gradient);
+    }
+    .novel-info {
+      padding: 1.25rem;
+    }
+    .novel-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .novel-card .author {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    .novel-card .chapters {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo">Novel Archive</a>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h1>Novel Archive</h1>
+      <p>Read light novels online</p>
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search" placeholder="Search novels...">
+      </div>
+    </section>
+
+    <section class="novel-grid" id="novel-grid">
+      <!-- Novel cards loaded by JS -->
+    </section>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
