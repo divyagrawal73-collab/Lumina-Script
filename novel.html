@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading... - Novel Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .novel-header {
+      display: flex;
+      gap: 2rem;
+      padding: 3rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .novel-cover {
+      width: 200px;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: var(--accent-gradient);
+      flex-shrink: 0;
+    }
+    .novel-details { flex: 1; }
+    .novel-details h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .novel-details .author {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    .novel-details .description {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    .progress-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .action-btns {
+      display: flex;
+      gap: 1rem;
+    }
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-smooth);
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+    }
+    .btn-secondary {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+    .chapter-list-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .chapter-search {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .chapter-search:focus {
+      border-color: var(--border-hover);
+    }
+    .chapter-list {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1rem 2rem 3rem;
+    }
+    .chapter-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all var(--transition-smooth);
+      text-decoration: none;
+      color: inherit;
+    }
+    .chapter-item:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--border-hover);
+      transform: translateX(8px);
+    }
+    .chapter-item.read { opacity: 0.6; }
+    .chapter-number {
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 3ch;
+    }
+    .chapter-title { flex: 1; }
+    .chapter-item.read::after {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      .novel-header { flex-direction: column; align-items: center; text-align: center; }
+      .action-btns { flex-direction: column; width: 100%; }
+      .btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo">Novel Archive</a>
+  </nav>
+
+  <main>
+    <section class="novel-header" id="novel-header">
+      <!-- Loaded by JS -->
+    </section>
+
+    <div class="chapter-list-header">
+      <input type="text" class="chapter-search" id="chapter-search" placeholder="Search chapters...">
+    </div>
+
+    <section class="chapter-list" id="chapter-list">
+      <!-- Loaded by JS -->
+    </section>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/novel.js"></script>
+</body>
+</html>

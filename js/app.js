@@ -42,14 +42,25 @@
     return div.innerHTML;
   }
 
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }
+
   function bindEvents() {
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
+    const debouncedSearch = debounce((query) => {
       const filtered = novels.filter(n =>
         n.title.toLowerCase().includes(query) ||
         n.author.toLowerCase().includes(query)
       );
       renderNovels(filtered);
+    }, 300);
+
+    searchInput.addEventListener('input', (e) => {
+      debouncedSearch(e.target.value.toLowerCase());
     });
   }
 
