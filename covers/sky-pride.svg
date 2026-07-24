@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0533"/>
+      <stop offset="50%" style="stop-color:#2d1b69"/>
+      <stop offset="100%" style="stop-color:#0d0d2b"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a2e"/>
+      <stop offset="60%" style="stop-color:#1a1a4e"/>
+      <stop offset="100%" style="stop-color:#2d1b69"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="600" height="800" fill="url(#bg)"/>
+  
+  <!-- Stars -->
+  <circle cx="50" cy="80" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="150" cy="40" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="250" cy="100" r="2" fill="#fff" opacity="0.9"/>
+  <circle cx="350" cy="60" r="1.5" fill="#fff" opacity="0.7"/>
+  <circle cx="450" cy="90" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="550" cy="50" r="2" fill="#fff" opacity="0.8"/>
+  <circle cx="100" cy="150" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="200" cy="180" r="1.5" fill="#fff" opacity="0.7"/>
+  <circle cx="400" cy="160" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="500" cy="130" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="300" cy="200" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="80" cy="250" r="2" fill="#fff" opacity="0.7"/>
+  <circle cx="520" cy="220" r="1" fill="#fff" opacity="0.5"/>
+  
+  <!-- Mountain silhouettes -->
+  <polygon points="0,500 100,350 200,420 300,300 400,380 500,320 600,400 600,500" fill="#0a0a1a" opacity="0.8"/>
+  <polygon points="0,520 150,380 250,450 350,340 450,400 550,360 600,420 600,520" fill="#0d0d2b" opacity="0.6"/>
+  
+  <!-- Cloud wisps -->
+  <ellipse cx="150" cy="380" rx="80" ry="15" fill="#2d1b69" opacity="0.3"/>
+  <ellipse cx="450" cy="350" rx="100" ry="12" fill="#2d1b69" opacity="0.25"/>
+  
+  <!-- Title text -->
+  <text x="300" y="620" text-anchor="middle" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#e8d5b7" letter-spacing="8">SKY PRIDE</text>
+  
+  <!-- Decorative line -->
+  <line x1="150" y1="650" x2="450" y2="650" stroke="#c9a86c" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Author -->
+  <text x="300" y="690" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#a89070" letter-spacing="4">WARBY PICUS</text>
+  
+  <!-- Subtitle -->
+  <text x="300" y="730" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#7a6a5a" letter-spacing="2">A XIANXIA EPIC</text>
+</svg>
