@@ -1,4 +1,3 @@
 // js/config.js - Supabase configuration
-// Fill in your Supabase project credentials
 const SUPABASE_URL = 'https://dayvubwnnsnrqbtfomog.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRheXZ1YndubnNucnFidGZvbW9nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwNTc4NTgsImV4cCI6MjEwMDYzMzg1OH0.fLl_ASgzENlXKty765IjWlQdUeYQchdwymBSu6GVV9c';
