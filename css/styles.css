@@ -1122,6 +1122,15 @@ body {
     transform: none;
     transition: none;
   }
+  .book-tilt-inner {
+    transition: none;
+  }
+  .book-tilt:hover .book-tilt-inner {
+    transform: none;
+  }
+  .book-floating {
+    animation: none;
+  }
 }
 
 /* ==================== RESPONSIVE ==================== */
@@ -1703,6 +1712,31 @@ body {
   background: var(--primary);
   border-radius: 2px;
   transition: width var(--transition-smooth);
+}
+
+/* 3D Tilt Effect */
+.book-tilt {
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+
+.book-tilt-inner {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+}
+
+.book-tilt:hover .book-tilt-inner {
+  transform: rotateY(-5deg) rotateX(5deg);
+}
+
+/* Floating Animation */
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.book-floating {
+  animation: floating 3s ease-in-out infinite;
 }
 
 @media (max-width: 768px) {

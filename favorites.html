@@ -103,9 +103,13 @@
           const favNovels = novels.filter(n => favorites.includes(n.id));
           document.getElementById('favorites-grid').innerHTML = favNovels.map(novel => `
             <a href="/novel.html?id=${novel.id}" class="book-card">
-              <div class="book-cover-wrapper">
-                <img class="book-cover" src="${novel.cover}" alt="${novel.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="book-cover-fallback" style="display:none;">${novel.title.charAt(0)}</div>
+              <div class="book-tilt">
+                <div class="book-tilt-inner">
+                  <div class="book-cover-wrapper book-floating">
+                    <img class="book-cover" src="${novel.cover}" alt="${novel.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="book-cover-fallback" style="display:none;">${novel.title.charAt(0)}</div>
+                  </div>
+                </div>
               </div>
               <div class="book-title">${novel.title}</div>
               <div class="book-author">${novel.author || 'Unknown'}</div>

@@ -34,9 +34,13 @@
   function renderNovels(list) {
     const gridHTML = list.map(novel => `
       <a href="/novel.html?id=${novel.id}" class="book-card">
-        <div class="book-cover-wrapper">
-          <img src="${novel.cover}" alt="${escapeHtml(novel.title)}" class="book-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="book-cover-fallback" style="display:none;">${escapeHtml(novel.title.charAt(0))}</div>
+        <div class="book-tilt">
+          <div class="book-tilt-inner">
+            <div class="book-cover-wrapper book-floating">
+              <img src="${novel.cover}" alt="${escapeHtml(novel.title)}" class="book-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="book-cover-fallback" style="display:none;">${escapeHtml(novel.title.charAt(0))}</div>
+            </div>
+          </div>
         </div>
         <div class="book-title">${escapeHtml(novel.title)}</div>
         <div class="book-author">${escapeHtml(novel.author)}</div>

@@ -51,10 +51,31 @@ const Animations = {
     document.querySelectorAll('.animate-on-scroll').forEach(el => {
       observer.observe(el);
     });
+  },
+
+  initTiltEffect() {
+    const cards = document.querySelectorAll('.book-tilt');
+    cards.forEach(card => {
+      const inner = card.querySelector('.book-tilt-inner') || card;
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / centerY * -8;
+        const rotateY = (x - centerX) / centerX * 8;
+        inner.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        inner.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
+      });
+    });
   }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   Animations.initPageTransition();
   Animations.initScrollAnimations();
+  Animations.initTiltEffect();
 });
