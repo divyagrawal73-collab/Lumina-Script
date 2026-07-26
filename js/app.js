@@ -50,17 +50,19 @@
   }
 
   async function renderContinueReading() {
-    const progress = await Storage.getAllReadingProgress();
-    const novelIds = Object.keys(progress);
+    const [progress, history] = await Promise.all([
+      Storage.getAllReadingProgress(),
+      Storage.getReadingHistory()
+    ]);
 
-    if (novelIds.length === 0) {
+    if (history.length === 0) {
       continueReadingSection.classList.add('hidden');
       return;
     }
 
     continueReadingSection.classList.remove('hidden');
 
-    const lastNovelId = novelIds[novelIds.length - 1];
+    const lastNovelId = history[0].novel_id;
     const novelProgress = progress[lastNovelId];
     const novel = novels.find(n => n.id === lastNovelId);
 
