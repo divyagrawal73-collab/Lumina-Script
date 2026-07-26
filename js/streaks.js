@@ -30,7 +30,8 @@ const Streaks = {
 
   // Call this when user reads a page
   trackReading(pages = 1, minutes = 0) {
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     if (!this._data.readDates.includes(today)) {
       this._data.readDates.push(today);
@@ -53,10 +54,14 @@ const Streaks = {
     let streak = 0;
     let currentDate = new Date(today);
 
-    // Count consecutive days from today backwards
-    while (readDates.has(currentDate.toISOString().split('T')[0])) {
-      streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
+    while (true) {
+      const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+      if (readDates.has(dateStr)) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
     }
 
     this._data.streak = streak;
@@ -85,7 +90,7 @@ const Streaks = {
     for (let i = 0; i < days; i++) {
       const date = new Date(today);
       date.setDate(date.getDate() - (days - 1 - i));
-      const dateStr = date.toISOString().split('T')[0];
+      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       const isRead = readDates.has(dateStr);
       const week = Math.floor(i / 7);
       const day = i % 7;
