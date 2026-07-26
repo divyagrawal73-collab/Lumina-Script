@@ -128,6 +128,4 @@ const Streaks = {
 };
 
 // Auto-init on profile page
-if (document.getElementById('readingHeatmap')) {
-  document.addEventListener('DOMContentLoaded', () => Streaks.init());
-}
+document.addEventListener('DOMContentLoaded', () => Streaks.init());
