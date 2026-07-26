@@ -234,8 +234,8 @@ body {
 }
 
 .theme-dot {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid var(--outline);
   background: var(--dot-color, var(--outline));
@@ -290,8 +290,8 @@ body {
   background: transparent;
   border: none;
   color: var(--on-surface-secondary);
-  width: 40px;
-  height: 40px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: var(--radius);
   cursor: pointer;
   display: flex;
@@ -355,6 +355,8 @@ body {
 .app-layout {
   display: flex;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 .main-content {
@@ -624,7 +626,7 @@ body {
   background: var(--primary-light);
   color: var(--primary);
   border-radius: 9999px;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -748,6 +750,34 @@ body {
 .btn svg {
   width: 18px;
   height: 18px;
+}
+
+/* Global active/pressed state */
+.btn-primary:active,
+.btn-secondary:active,
+.btn-danger:active,
+.icon-btn:active,
+.theme-toggle:active,
+.nav-btn:active,
+.page-btn:active,
+.chapter-item:active,
+.favorite-btn:active,
+.theme-dot:active,
+.reading-mode-btn:active,
+.sidebar-link:active,
+.bottomnav-item:active,
+.hero-card:active,
+.book-card:active,
+.tag-chip:active,
+.form-btn:active,
+.password-toggle:active,
+.comment-like-btn:active,
+.comment-delete-btn:active,
+.sidebar-login-btn:active,
+.sidebar-logout:active,
+.auth-tab:active {
+  transform: scale(0.97);
+  opacity: 0.85;
 }
 
 /* Novel Tags */
@@ -1275,7 +1305,31 @@ body {
 
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    z-index: 200;
+    transition: left 0.3s ease;
+    display: block !important;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-overlay {
     display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 199;
+  }
+
+  .sidebar.open + .sidebar-overlay,
+  .sidebar-overlay.active {
+    display: block;
   }
 
   .sidebar .theme-dots {
@@ -1343,6 +1397,32 @@ body {
 
   .reader-bottombar {
     padding-bottom: calc(0.875rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Reader page responsive */
+@media (max-width: 768px) {
+  .reading-area {
+    padding: 2rem 1rem;
+  }
+  .reader-bottombar {
+    padding: 0.5rem;
+  }
+  .nav-btn span {
+    display: none;
+  }
+  .nav-btn {
+    padding: 0.5rem;
+    min-width: 44px;
+  }
+}
+
+/* Achievement toast above bottom nav */
+@media (max-width: 768px) {
+  .achievement-toast {
+    bottom: 80px;
+    right: 16px;
+    left: 16px;
   }
 }
 
@@ -1756,8 +1836,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 0.5rem;
   border: 1px solid var(--outline);
   border-radius: var(--radius);

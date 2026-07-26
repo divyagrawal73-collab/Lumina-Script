@@ -87,3 +87,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const page = document.body.dataset.page || 'library';
   renderNav(page);
 });
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  if (sidebar) {
+    sidebar.classList.toggle('open');
+  }
+}
+
+// Close sidebar when clicking outside
+document.addEventListener('click', (e) => {
+  const sidebar = document.querySelector('.sidebar');
+  const hamburger = document.querySelector('.hamburger-btn');
+  if (sidebar && sidebar.classList.contains('open') &&
+      !sidebar.contains(e.target) && !hamburger?.contains(e.target)) {
+    sidebar.classList.remove('open');
+  }
+});
