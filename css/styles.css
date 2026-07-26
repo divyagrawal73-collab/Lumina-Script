@@ -460,7 +460,7 @@ body {
 
 /* Continue Reading Hero Card */
 .hero-card {
-  background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   border-radius: var(--radius-xl);
   padding: 1.75rem;
   margin-bottom: 2.5rem;
