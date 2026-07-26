@@ -79,7 +79,8 @@ const Particles = {
   },
 
   update() {
-    this.particles.forEach((p, i) => {
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
       p.y -= p.speedY;
       p.x += p.speedX;
       p.life++;
@@ -88,7 +89,7 @@ const Particles = {
       if (p.life > p.maxLife || p.y < -10 || p.opacity <= 0) {
         this.particles.splice(i, 1);
       }
-    });
+    }
   },
 
   draw() {
