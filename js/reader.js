@@ -80,7 +80,18 @@
     elements.chapterTitle.textContent = chapter.title;
     document.title = `${chapter.title} - Lumina Script`;
 
-    const paragraphs = chapter.content.split('\n').filter(p => p.trim());
+    // Fetch content on-demand if not in local data (e.g., lord-of-the-mysteries)
+    let content = chapter.content;
+    if (!content && typeof Fetcher !== 'undefined' && Fetcher.getChapterContent) {
+      elements.chapterContent.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading chapter content...</p></div>';
+      content = await Fetcher.getChapterContent(novelId, chapterId);
+      if (!content) {
+        elements.chapterContent.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--on-surface-secondary);">Failed to load chapter content. Please try again.</p>';
+        return;
+      }
+    }
+
+    const paragraphs = content.split('\n').filter(p => p.trim());
     elements.chapterContent.innerHTML = paragraphs
       .map(p => `<p>${escapeHtml(p)}</p>`)
       .join('');

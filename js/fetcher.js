@@ -2,7 +2,10 @@
 
 const Fetcher = {
   _novelsMeta: null,
-  _localNovelIds: ['sky-pride', 'shadow-slave', 'swallowed-star'],
+  _localNovelIds: ['sky-pride', 'shadow-slave', 'swallowed-star', 'lord-of-the-mysteries'],
+  _apiNovelIds: {
+    'lord-of-the-mysteries': '69faadd3a5f4c7d1b734d49f'
+  },
 
   // Load novels metadata from static file
   async getNovels() {
@@ -72,6 +75,22 @@ const Fetcher = {
       return { ...data, source: 'api' };
     } catch (e) {
       console.error(`Failed to fetch chapter ${chapterId} for ${novelId}:`, e);
+      return null;
+    }
+  },
+
+  // Get chapter content on-demand (for novels with only titles stored locally)
+  async getChapterContent(novelId, chapterId) {
+    const apiId = this._apiNovelIds[novelId];
+    if (!apiId) return null;
+
+    try {
+      const res = await fetch(`/api/proxy/novel/${apiId}/chapter/${chapterId}`);
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
+      const data = await res.json();
+      return data.content || data.chapter_content || '';
+    } catch (e) {
+      console.error(`Failed to fetch chapter content for ${novelId} ch.${chapterId}:`, e);
       return null;
     }
   }
