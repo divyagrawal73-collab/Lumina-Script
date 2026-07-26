@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Lumina Script</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .profile-header {
+      text-align: center;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--outline);
+      margin-bottom: 2rem;
+    }
+
+    .profile-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+      color: white;
+      font-size: 2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-joined {
+      color: var(--on-surface-secondary);
+      font-size: var(--font-label-md);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--surface-alt);
+      border: 1px solid var(--outline);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 0.375rem;
+    }
+
+    .stat-label {
+      font-size: var(--font-label-md);
+      color: var(--on-surface-secondary);
+      font-weight: 500;
+    }
+
+    .profile-section {
+      margin-bottom: 2rem;
+    }
+
+    .profile-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .profile-section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .status-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-tab {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--outline);
+      border-radius: var(--radius);
+      background: var(--surface-alt);
+      color: var(--on-surface-secondary);
+      font-family: var(--font-ui);
+      font-size: var(--font-label-md);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .status-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .status-tab:hover:not(.active) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .novel-list-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.875rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--outline);
+      background: var(--surface-alt);
+      margin-bottom: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-fast);
+    }
+
+    .novel-list-item:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .novel-list-cover {
+      width: 48px;
+      height: 64px;
+      border-radius: var(--radius);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .novel-list-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .novel-list-title {
+      font-weight: 600;
+      font-size: var(--font-label-md);
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .novel-list-meta {
+      font-size: 0.8rem;
+      color: var(--on-surface-secondary);
+    }
+
+    .novel-list-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .status-reading { background: #dbeafe; color: #1d4ed8; }
+    .status-plan-to-read { background: #fef3c7; color: #b45309; }
+    .status-completed { background: #d1fae5; color: #047857; }
+    .status-dropped { background: #fee2e2; color: #b91c1c; }
+
+    [data-theme="dark"] .status-reading { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    [data-theme="dark"] .status-plan-to-read { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    [data-theme="dark"] .status-completed { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    [data-theme="dark"] .status-dropped { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    .rating-stars {
+      display: flex;
+      gap: 2px;
+      color: #f59e0b;
+    }
+
+    .rating-stars svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .rating-stars svg.empty {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .btn-danger {
+      background: var(--error);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--on-surface-secondary);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body data-page="profile">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a href="/" class="sidebar-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        Lumina Script
+      </a>
+      <nav class="sidebar-nav"></nav>
+      <button class="theme-toggle" id="theme-toggle">
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <span id="theme-label">Dark Mode</span>
+      </button>
+    </aside>
+
+    <header class="topbar">
+      <button class="icon-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" x2="20" y1="12" y2="12"/>
+          <line x1="4" x2="20" y1="6" y2="6"/>
+          <line x1="4" x2="20" y1="18" y2="18"/>
+        </svg>
+      </button>
+      <span class="topbar-title">Profile</span>
+      <div></div>
+    </header>
+
+    <main class="main-content" id="profile-content">
+      <!-- Loaded by JS -->
+    </main>
+
+    <nav class="bottomnav"></nav>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    const content = document.getElementById('profile-content');
+
+    async function renderProfile() {
+      const user = Storage.getCurrentUser();
+      if (!user) {
+        content.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <h3>Login to see your profile</h3>
+            <p style="margin-top: 0.5rem; margin-bottom: 1.5rem;">Track your reading progress, rate novels, and more.</p>
+            <a href="/login.html" class="btn btn-primary">Login / Sign Up</a>
+          </div>
+        `;
+        return;
+      }
+
+      const stats = await Storage.getUserStats();
+      const statuses = await Storage.getAllNovelStatuses();
+      const favorites = await Storage.getFavorites();
+      const ratings = await Storage.getAllRatings();
+      const novels = window.__novels || [];
+
+      const statusCounts = {
+        reading: Object.values(statuses).filter(s => s === 'reading').length,
+        'plan-to-read': Object.values(statuses).filter(s => s === 'plan-to-read').length,
+        completed: Object.values(statuses).filter(s => s === 'completed').length,
+        dropped: Object.values(statuses).filter(s => s === 'dropped').length,
+      };
+
+      const username = user.user_metadata?.username || 'User';
+
+      content.innerHTML = `
+        <div class="profile-header">
+          <div class="profile-avatar-large">${username.charAt(0).toUpperCase()}</div>
+          <h1 class="profile-name">${username}</h1>
+          <p class="profile-joined">Member since ${new Date(user.created_at || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">${stats.novelsRead}</div>
+            <div class="stat-label">Novels Read</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.chaptersRead}</div>
+            <div class="stat-label">Chapters Read</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${favorites.length}</div>
+            <div class="stat-label">Favorites</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.ratingsCount}</div>
+            <div class="stat-label">Ratings</div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <h2 class="profile-section-title">Reading List</h2>
+          </div>
+          <div class="status-tabs" id="status-tabs">
+            <button class="status-tab active" data-status="all">All</button>
+            <button class="status-tab" data-status="reading">Reading (${statusCounts.reading})</button>
+            <button class="status-tab" data-status="plan-to-read">Plan to Read (${statusCounts['plan-to-read']})</button>
+            <button class="status-tab" data-status="completed">Completed (${statusCounts.completed})</button>
+            <button class="status-tab" data-status="dropped">Dropped (${statusCounts.dropped})</button>
+          </div>
+          <div id="reading-list"></div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <h2 class="profile-section-title">Your Ratings</h2>
+          </div>
+          <div id="ratings-list"></div>
+        </div>
+
+        <div class="profile-section" style="padding-top: 1rem; border-top: 1px solid var(--outline);">
+          <button class="btn btn-danger" onclick="if(confirm('Are you sure? This cannot be undone.')) { Storage.logout().then(() => window.location.href='/'); }">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Logout
+          </button>
+        </div>
+      `;
+
+      await renderReadingList('all');
+      await renderRatingsList();
+
+      document.getElementById('status-tabs').addEventListener('click', async (e) => {
+        const tab = e.target.closest('.status-tab');
+        if (!tab) return;
+        document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        await renderReadingList(tab.dataset.status);
+      });
+    }
+
+    async function renderReadingList(filter) {
+      const statuses = await Storage.getAllNovelStatuses();
+      const novels = window.__novels || [];
+      const listEl = document.getElementById('reading-list');
+
+      let items = Object.entries(statuses).map(([novelId, status]) => {
+        const novel = novels.find(n => n.id === novelId);
+        return { novelId, status, novel };
+      }).filter(item => item.novel);
+
+      if (filter !== 'all') {
+        items = items.filter(item => item.status === filter);
+      }
+
+      if (items.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state" style="padding: 2rem;">
+            <p>${filter === 'all' ? 'No novels in your reading list yet.' : `No ${filter.replace('-', ' ')} novels.`}</p>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = items.map(item => `
+        <a href="/novel.html?id=${item.novelId}" class="novel-list-item">
+          <img class="novel-list-cover" src="${item.novel.cover}" alt="${item.novel.title}" onerror="this.style.display='none'">
+          <div class="novel-list-info">
+            <div class="novel-list-title">${item.novel.title}</div>
+            <div class="novel-list-meta">${item.novel.author || 'Unknown Author'}</div>
+          </div>
+          <span class="novel-list-status status-${item.status}">${item.status.replace('-', ' ')}</span>
+        </a>
+      `).join('');
+    }
+
+    async function renderRatingsList() {
+      const ratings = await Storage.getAllRatings();
+      const novels = window.__novels || [];
+      const listEl = document.getElementById('ratings-list');
+
+      const items = Object.entries(ratings).map(([novelId, rating]) => {
+        const novel = novels.find(n => n.id === novelId);
+        return { novelId, rating, novel };
+      }).filter(item => item.novel && item.rating > 0);
+
+      if (items.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state" style="padding: 2rem;">
+            <p>No ratings yet. Rate novels to see them here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = items.map(item => `
+        <a href="/novel.html?id=${item.novelId}" class="novel-list-item">
+          <img class="novel-list-cover" src="${item.novel.cover}" alt="${item.novel.title}" onerror="this.style.display='none'">
+          <div class="novel-list-info">
+            <div class="novel-list-title">${item.novel.title}</div>
+            <div class="rating-stars">
+              ${[1,2,3,4,5].map(s => `<svg class="${s <= item.rating ? '' : 'empty'}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    fetch('/data/novels.json')
+      .then(r => r.json())
+      .then(data => { window.__novels = data; renderProfile(); })
+      .catch(() => { window.__novels = []; renderProfile(); });
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeLabel = document.getElementById('theme-label');
+    function updateThemeLabel() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      themeLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    }
+    updateThemeLabel();
+    themeToggle.addEventListener('click', () => { Storage.toggleTheme(); updateThemeLabel(); });
+  </script>
+</body>
+</html>

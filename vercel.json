@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/data/(.*)", "destination": "/data/$1" },
     { "source": "/(.*)", "destination": "/$1" }
   ],
   "headers": [
@@ -7,6 +9,12 @@
       "source": "/data/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/api/proxy/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=86400, max-age=3600" }
       ]
     }
   ]

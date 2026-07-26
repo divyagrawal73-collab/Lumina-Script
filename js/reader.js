@@ -1,4 +1,4 @@
-// js/reader.js - Reader page logic
+// js/reader.js - Reader page logic (Lumina Script)
 
 (function() {
   'use strict';
@@ -16,6 +16,7 @@
     prevBtn: document.getElementById('prev-chapter'),
     nextBtn: document.getElementById('next-chapter'),
     progressBar: document.getElementById('progress-bar'),
+    bookmarkBtn: document.getElementById('bookmark-btn'),
     settingsBtn: document.getElementById('settings-btn'),
     settingsPanel: document.getElementById('settings-panel'),
     settingsOverlay: document.getElementById('settings-overlay'),
@@ -41,6 +42,11 @@
     loadSettings();
     await loadChapter(currentChapterId);
     bindEvents();
+
+    Storage.startReadingSession(novelId);
+    window.addEventListener('beforeunload', () => {
+      Storage.endReadingSession(novelId);
+    });
   }
 
   function getParam(name) {
@@ -64,17 +70,20 @@
 
     currentChapterId = chapterId;
     elements.chapterTitle.textContent = chapter.title;
-    document.title = `${chapter.title} - Novel Archive`;
+    document.title = `${chapter.title} - Lumina Script`;
 
     const paragraphs = chapter.content.split('\n').filter(p => p.trim());
     elements.chapterContent.innerHTML = paragraphs
       .map(p => `<p>${escapeHtml(p)}</p>`)
       .join('');
 
+    await renderChapterComments(chapterId);
+    await updateBookmarkBtn();
     elements.readingArea.scrollTop = 0;
     updateNavButtons();
     updateProgress(0);
-    Storage.saveReadingProgress(novelId, chapterId);
+    await Storage.saveReadingProgress(novelId, chapterId);
+    await Storage.addToReadingHistory(novelId, chapterId);
   }
 
   function updateNavButtons() {
@@ -86,13 +95,120 @@
     elements.progressBar.style.width = percent + '%';
   }
 
+  async function updateBookmarkBtn() {
+    const isBookmarked = await Storage.isChapterBookmarked(novelId, currentChapterId);
+    const svg = elements.bookmarkBtn.querySelector('svg');
+    svg.setAttribute('fill', isBookmarked ? 'currentColor' : 'none');
+    elements.bookmarkBtn.title = isBookmarked ? 'Remove bookmark' : 'Bookmark chapter';
+  }
+
   function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  // Settings
+  async function renderChapterComments(chapterId) {
+    const commentsEl = document.getElementById('chapter-comments');
+    const comments = await Storage.getComments(novelId, chapterId);
+    const user = Storage.getCurrentUser();
+
+    let formHtml = '';
+    if (user) {
+      formHtml = `
+        <div class="comment-form">
+          <div class="comment-input-wrapper">
+            <div class="comment-avatar">${(user.user_metadata?.username || 'Anonymous').charAt(0).toUpperCase()}</div>
+            <div class="comment-input-area">
+              <textarea class="comment-textarea" id="ch-comment-input" placeholder="Comment on this chapter..."></textarea>
+              <div class="comment-actions">
+                <button class="btn btn-primary" id="ch-post-comment" style="padding:0.5rem 1rem;font-size:var(--font-label-md);">Post</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      formHtml = `<div style="text-align:center;padding:1rem;color:var(--on-surface-secondary);font-size:var(--font-label-md);"><a href="/login.html" style="color:var(--primary);text-decoration:none;font-weight:600;">Login</a> to comment on this chapter.</div>`;
+    }
+
+    const commentsHtml = comments.length === 0
+      ? '<div class="no-comments">No comments yet.</div>'
+      : comments.map(c => `
+        <div class="comment-item">
+          <div class="comment-avatar">${c.username.charAt(0).toUpperCase()}</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-author">${escapeHtml(c.username)}</span>
+              <span class="comment-time">${timeAgo(c.created_at)}</span>
+            </div>
+            <div class="comment-text">${escapeHtml(c.text)}</div>
+            <div class="comment-footer">
+              <button class="comment-like-btn ${(c.liked_by || []).includes(user?.id) ? 'liked' : ''}" data-id="${c.id}">
+                <svg viewBox="0 0 24 24" fill="${(c.liked_by || []).includes(user?.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                </svg>
+                ${c.likes > 0 ? c.likes : ''}
+              </button>
+              ${user && c.user_id === user.id ? `<button class="comment-delete-btn" data-id="${c.id}">Delete</button>` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+    commentsEl.innerHTML = `
+      <div class="comments-header">
+        <h2 class="comments-title">Chapter Comments</h2>
+        <span class="comments-count">${comments.length}</span>
+      </div>
+      ${formHtml}
+      <div class="comment-list">${commentsHtml}</div>
+    `;
+
+    if (user) {
+      const postBtn = document.getElementById('ch-post-comment');
+      const input = document.getElementById('ch-comment-input');
+      if (postBtn) {
+        postBtn.addEventListener('click', async () => {
+          const text = input.value.trim();
+          if (!text) return;
+          await Storage.addComment(novelId, chapterId, text);
+          input.value = '';
+          await renderChapterComments(chapterId);
+        });
+      }
+    }
+
+    commentsEl.querySelectorAll('.comment-like-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!user) { window.location.href = '/login.html'; return; }
+        await Storage.likeComment(novelId, btn.dataset.id, chapterId);
+        await renderChapterComments(chapterId);
+      });
+    });
+
+    commentsEl.querySelectorAll('.comment-delete-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (confirm('Delete comment?')) {
+          await Storage.deleteComment(novelId, btn.dataset.id, chapterId);
+          await renderChapterComments(chapterId);
+        }
+      });
+    });
+  }
+
+  function timeAgo(dateStr) {
+    const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+    if (seconds < 60) return 'just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days}d ago`;
+    return new Date(dateStr).toLocaleDateString();
+  }
+
   function loadSettings() {
     const settings = Storage.getReadingSettings();
     applyFont(settings.fontFamily);
@@ -150,6 +266,17 @@
       const el = elements.readingArea;
       const progress = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
       updateProgress(Math.min(100, Math.max(0, progress)));
+    });
+
+    elements.bookmarkBtn.addEventListener('click', async () => {
+      if (!Storage.isLoggedIn()) { window.location.href = '/login.html'; return; }
+      const isBookmarked = await Storage.isChapterBookmarked(novelId, currentChapterId);
+      if (isBookmarked) {
+        await Storage.removeChapterBookmark(novelId, currentChapterId);
+      } else {
+        await Storage.addChapterBookmark(novelId, currentChapterId);
+      }
+      await updateBookmarkBtn();
     });
 
     elements.settingsBtn.addEventListener('click', toggleSettings);

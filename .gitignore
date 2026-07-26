@@ -1,0 +1,12 @@
+node_modules/
+.vercel/
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Large chapter data - uploaded via Vercel CLI
+data/sky-pride/chapters.json
+data/shadow-slave/
+data/swallowed-star/

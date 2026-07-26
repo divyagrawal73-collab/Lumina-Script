@@ -3,219 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loading... - Novel Archive</title>
+  <title>Loading... - Lumina Script</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&family=OpenDyslexic:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
-  <style>
-    body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    .reader-top-bar {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.875rem 1.25rem;
-      background: var(--bg-secondary);
-      backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid var(--border);
-      z-index: 20;
-    }
-    .reader-chapter-title {
-      flex: 1;
-      font-size: 1rem;
-      font-weight: 600;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .icon-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-size: 1.25rem;
-      cursor: pointer;
-      padding: 0.625rem;
-      border-radius: 12px;
-      transition: all var(--transition-fast);
-    }
-    .icon-btn:hover { background: var(--bg-tertiary); }
-    .reading-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 3rem 1.5rem;
-    }
-    .chapter-content {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .chapter-content p { margin-bottom: 1.5em; }
-    .reader-bottom-bar {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.875rem 1.25rem;
-      background: var(--bg-secondary);
-      backdrop-filter: var(--glass-blur);
-      border-top: 1px solid var(--border);
-    }
-    .nav-btn {
-      padding: 0.75rem 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--bg-glass);
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all var(--transition-smooth);
-    }
-    .nav-btn:hover:not(:disabled) {
-      background: var(--accent-gradient);
-      border-color: transparent;
-      color: white;
-    }
-    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-    .progress-container {
-      flex: 1;
-      height: 6px;
-      background: var(--bg-tertiary);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      background: var(--accent-gradient);
-      width: 0%;
-      transition: width var(--transition-fast);
-    }
-    .settings-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 30;
-    }
-    .settings-overlay.hidden { display: none; }
-    .settings-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 340px;
-      height: 100vh;
-      background: var(--bg-secondary);
-      backdrop-filter: var(--glass-blur);
-      border-left: 1px solid var(--border);
-      z-index: 40;
-      transform: translateX(100%);
-      transition: transform var(--transition-bounce);
-      display: flex;
-      flex-direction: column;
-    }
-    .settings-panel.open { transform: translateX(0); }
-    .settings-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .settings-body {
-      padding: 1.5rem;
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
-    }
-    .setting-group { display: flex; flex-direction: column; gap: 0.625rem; }
-    .setting-group label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-    }
-    .setting-group select {
-      padding: 0.875rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--bg-glass);
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      cursor: pointer;
-      outline: none;
-    }
-    .setting-group select:focus { border-color: var(--border-hover); }
-    .setting-group input[type="range"] {
-      width: 100%;
-      height: 8px;
-      -webkit-appearance: none;
-      background: var(--bg-tertiary);
-      border-radius: 4px;
-      outline: none;
-      cursor: pointer;
-    }
-    .setting-group input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 22px;
-      height: 22px;
-      background: var(--accent-gradient);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    @media (max-width: 768px) {
-      .settings-panel { width: 100%; }
-      .nav-btn { padding: 0.625rem 1rem; font-size: 0.85rem; }
-    }
-  </style>
 </head>
 <body>
-  <div class="reader-top-bar">
-    <button class="icon-btn" id="back-btn">←</button>
-    <div class="reader-chapter-title" id="chapter-title">Loading...</div>
-    <button class="icon-btn" id="settings-btn">⚙</button>
-  </div>
-
-  <div class="reading-area" id="reading-area">
-    <div class="chapter-content" id="chapter-content">
-      <div class="loading">Loading chapter...</div>
+  <div class="reader-layout">
+    <div class="reader-topbar">
+      <button class="icon-btn" id="back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+      </button>
+      <div class="reader-chapter-title" id="chapter-title">Loading...</div>
+      <button class="icon-btn" id="bookmark-btn" aria-label="Bookmark" title="Bookmark chapter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+      </button>
+      <button class="icon-btn" id="settings-btn" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      </button>
     </div>
-  </div>
 
-  <div class="reader-bottom-bar">
-    <button class="nav-btn" id="prev-chapter">← Previous</button>
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    <button class="nav-btn" id="next-chapter">Next →</button>
-  </div>
-
-  <div class="settings-overlay hidden" id="settings-overlay"></div>
-  <div class="settings-panel" id="settings-panel">
-    <div class="settings-header">
-      <h3>Reading Settings</h3>
-      <button class="icon-btn" id="close-settings">✕</button>
-    </div>
-    <div class="settings-body">
-      <div class="setting-group">
-        <label>Font Family</label>
-        <select id="font-family">
-          <option value="'Inter', sans-serif">Inter</option>
-          <option value="'Merriweather', serif">Merriweather</option>
-          <option value="'OpenDyslexic', sans-serif">OpenDyslexic</option>
-        </select>
+    <div class="reading-area" id="reading-area">
+      <div class="chapter-content" id="chapter-content">
+        <div class="loading">Loading chapter...</div>
       </div>
-      <div class="setting-group">
-        <label>Font Size: <span id="font-size-value">18</span>px</label>
-        <input type="range" id="font-size" min="12" max="28" value="18">
+
+      <!-- Chapter Comments -->
+      <div class="chapter-comments" id="chapter-comments"></div>
+    </div>
+
+    <div class="reader-bottombar">
+      <button class="nav-btn" id="prev-chapter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        Previous
+      </button>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
       </div>
-      <div class="setting-group">
-        <label>Line Height: <span id="line-height-value">1.8</span></label>
-        <input type="range" id="line-height" min="1.2" max="2.5" step="0.1" value="1.8">
+      <button class="nav-btn" id="next-chapter">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="settings-overlay hidden" id="settings-overlay"></div>
+    <div class="settings-panel" id="settings-panel">
+      <div class="settings-header">
+        <h3>Reading Settings</h3>
+        <button class="icon-btn" id="close-settings" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6 6 18"/>
+            <path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="settings-body">
+        <div class="setting-group">
+          <label>Font Family</label>
+          <select id="font-family">
+            <option value="'EB Garamond', serif">EB Garamond (Reader)</option>
+            <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (UI)</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="system-ui, sans-serif">System UI</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label>Font Size: <span id="font-size-value">18</span>px</label>
+          <input type="range" id="font-size" min="14" max="28" value="18">
+        </div>
+        <div class="setting-group">
+          <label>Line Height: <span id="line-height-value">1.8</span></label>
+          <input type="range" id="line-height" min="1.4" max="2.4" step="0.1" value="1.8">
+        </div>
+        <div class="setting-group">
+          <label>Theme</label>
+          <button class="theme-toggle" id="theme-toggle" style="width: 100%; justify-content: center;">
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <span id="theme-label">Dark Mode</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/fetcher.js"></script>
   <script src="js/reader.js"></script>
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeLabel = document.getElementById('theme-label');
+    
+    function updateThemeLabel() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      themeLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    }
+    
+    updateThemeLabel();
+    
+    themeToggle.addEventListener('click', () => {
+      Storage.toggleTheme();
+      updateThemeLabel();
+    });
+  </script>
 </body>
 </html>

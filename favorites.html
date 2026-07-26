@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorites - Lumina Script</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="favorites">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a href="/" class="sidebar-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        Lumina Script
+      </a>
+      <nav class="sidebar-nav"></nav>
+      <button class="theme-toggle" id="theme-toggle">
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <span id="theme-label">Dark Mode</span>
+      </button>
+    </aside>
+
+    <header class="topbar">
+      <button class="icon-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" x2="20" y1="12" y2="12"/>
+          <line x1="4" x2="20" y1="6" y2="6"/>
+          <line x1="4" x2="20" y1="18" y2="18"/>
+        </svg>
+      </button>
+      <span class="topbar-title">Favorites</span>
+      <div></div>
+    </header>
+
+    <main class="main-content" id="favorites-content"></main>
+
+    <nav class="bottomnav"></nav>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    const content = document.getElementById('favorites-content');
+
+    async function renderFavorites() {
+      const user = Storage.getCurrentUser();
+      if (!user) {
+        content.innerHTML = `
+          <div class="page-header">
+            <h1 class="page-title">Favorites</h1>
+          </div>
+          <div style="text-align:center;padding:3rem;color:var(--on-surface-secondary);">
+            <p style="margin-bottom:1rem;">Login to see your favorite novels.</p>
+            <a href="/login.html" class="btn btn-primary">Login / Sign Up</a>
+          </div>
+        `;
+        return;
+      }
+
+      const favorites = await Storage.getFavorites();
+
+      content.innerHTML = `
+        <div class="page-header">
+          <h1 class="page-title">Favorites</h1>
+          <p class="page-subtitle">${favorites.length} novel${favorites.length !== 1 ? 's' : ''} saved</p>
+        </div>
+        <div id="favorites-grid" class="book-grid"></div>
+      `;
+
+      if (favorites.length === 0) {
+        document.getElementById('favorites-grid').innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--on-surface-secondary);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px;margin-bottom:1rem;opacity:0.4;">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+            <p>No favorites yet. Browse the library and tap the favorite button to save novels here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      fetch('/data/novels.json')
+        .then(r => r.json())
+        .then(novels => {
+          const favNovels = novels.filter(n => favorites.includes(n.id));
+          document.getElementById('favorites-grid').innerHTML = favNovels.map(novel => `
+            <a href="/novel.html?id=${novel.id}" class="book-card">
+              <div class="book-cover-wrapper">
+                <img class="book-cover" src="${novel.cover}" alt="${novel.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="book-cover-fallback" style="display:none;">${novel.title.charAt(0)}</div>
+              </div>
+              <div class="book-title">${novel.title}</div>
+              <div class="book-author">${novel.author || 'Unknown'}</div>
+            </a>
+          `).join('');
+        });
+    }
+
+    renderFavorites();
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeLabel = document.getElementById('theme-label');
+    function updateThemeLabel() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      themeLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    }
+    updateThemeLabel();
+    themeToggle.addEventListener('click', () => { Storage.toggleTheme(); updateThemeLabel(); });
+  </script>
+</body>
+</html>
