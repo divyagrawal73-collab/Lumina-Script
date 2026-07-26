@@ -1048,25 +1048,25 @@ body {
 }
 
 /* Focus Mode - dims everything except current paragraph */
-.mode-focus .chapter-text p {
+.mode-focus .chapter-content p {
   opacity: 0.3;
   transition: opacity 0.3s ease;
 }
 
-.mode-focus .chapter-text p:hover,
-.mode-focus .chapter-text p.active {
+.mode-focus .chapter-content p:hover,
+.mode-focus .chapter-content p.active {
   opacity: 1;
 }
 
 /* Typewriter Mode */
-.mode-typewriter .chapter-text p {
+.mode-typewriter .chapter-content p {
   font-family: 'Courier New', monospace;
   letter-spacing: 0.05em;
   line-height: 1.8;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mode-focus .chapter-text p {
+  .mode-focus .chapter-content p {
     transition: none;
   }
 }
