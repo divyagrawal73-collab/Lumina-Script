@@ -95,6 +95,9 @@
     if (typeof Streaks !== 'undefined') {
       Streaks.trackReading(1, elapsed);
     }
+    if (typeof Achievements !== 'undefined') {
+      Achievements.trackChapter();
+    }
   }
 
   function updateNavButtons() {

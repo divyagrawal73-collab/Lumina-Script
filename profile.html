@@ -280,6 +280,7 @@
   <script src="js/utils.js?v=20260727"></script>
   <script src="js/animations.js?v=20260727"></script>
   <script src="js/streaks.js?v=20260727"></script>
+  <script src="js/achievements.js?v=20260727"></script>
   <script>
     const content = document.getElementById('profile-content');
 
@@ -386,6 +387,11 @@
           </div>
           <div id="ratings-list"></div>
         </div>
+
+        <section class="achievements-section">
+          <h2>Achievements</h2>
+          <div id="achievementsGrid" class="achievements-grid"></div>
+        </section>
 
         <div class="profile-section" style="padding-top: 1rem; border-top: 1px solid var(--outline);">
           <button class="btn btn-danger" onclick="if(confirm('Are you sure? This cannot be undone.')) { Storage.logout().then(() => window.location.href='/'); }">

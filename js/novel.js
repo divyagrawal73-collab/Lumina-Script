@@ -203,6 +203,9 @@
       if (!star) return;
       const rating = parseInt(star.dataset.rating);
       await Storage.submitRating(novelData.id, rating);
+      if (typeof Achievements !== 'undefined') {
+        Achievements.trackRating();
+      }
       document.querySelectorAll('#rating-stars svg').forEach((s, i) => {
         s.classList.toggle('active', i < rating);
       });
