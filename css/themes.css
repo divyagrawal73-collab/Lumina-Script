@@ -1,0 +1,85 @@
+/* css/themes.css - Anime Color Themes */
+
+/* Sakura (Pink) */
+[data-color="sakura"] {
+  --primary: #ec4899;
+  --primary-hover: #db2777;
+  --primary-light: #fce7f3;
+  --primary-glow: rgba(236, 72, 153, 0.3);
+}
+[data-theme="dark"][data-color="sakura"] {
+  --primary: #f472b6;
+  --primary-hover: #f9a8d4;
+  --primary-light: rgba(244, 114, 182, 0.15);
+  --primary-glow: rgba(244, 114, 182, 0.3);
+}
+
+/* Ocean (Blue) */
+[data-color="ocean"] {
+  --primary: #0ea5e9;
+  --primary-hover: #0284c7;
+  --primary-light: #e0f2fe;
+  --primary-glow: rgba(14, 165, 233, 0.3);
+}
+[data-theme="dark"][data-color="ocean"] {
+  --primary: #38bdf8;
+  --primary-hover: #7dd3fc;
+  --primary-light: rgba(56, 189, 248, 0.15);
+  --primary-glow: rgba(56, 189, 248, 0.3);
+}
+
+/* Sunset (Orange) */
+[data-color="sunset"] {
+  --primary: #f97316;
+  --primary-hover: #ea580c;
+  --primary-light: #fff7ed;
+  --primary-glow: rgba(249, 115, 22, 0.3);
+}
+[data-theme="dark"][data-color="sunset"] {
+  --primary: #fb923c;
+  --primary-hover: #fdba74;
+  --primary-light: rgba(251, 146, 60, 0.15);
+  --primary-glow: rgba(251, 146, 60, 0.3);
+}
+
+/* Forest (Green) */
+[data-color="forest"] {
+  --primary: #22c55e;
+  --primary-hover: #16a34a;
+  --primary-light: #f0fdf4;
+  --primary-glow: rgba(34, 197, 94, 0.3);
+}
+[data-theme="dark"][data-color="forest"] {
+  --primary: #4ade80;
+  --primary-hover: #86efac;
+  --primary-light: rgba(74, 222, 128, 0.15);
+  --primary-glow: rgba(74, 222, 128, 0.3);
+}
+
+/* Violet (Purple) */
+[data-color="violet"] {
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --primary-light: #f5f3ff;
+  --primary-glow: rgba(139, 92, 246, 0.3);
+}
+[data-theme="dark"][data-color="violet"] {
+  --primary: #a78bfa;
+  --primary-hover: #c4b5fd;
+  --primary-light: rgba(167, 139, 250, 0.15);
+  --primary-glow: rgba(167, 139, 250, 0.3);
+}
+
+/* Neon (Cyan) */
+[data-color="neon"] {
+  --primary: #06b6d4;
+  --primary-hover: #0891b2;
+  --primary-light: #ecfeff;
+  --primary-glow: rgba(6, 182, 212, 0.3);
+}
+[data-theme="dark"][data-color="neon"] {
+  --primary: #22d3ee;
+  --primary-hover: #67e8f9;
+  --primary-light: rgba(34, 211, 238, 0.15);
+  --primary-glow: rgba(34, 211, 238, 0.3);
+}

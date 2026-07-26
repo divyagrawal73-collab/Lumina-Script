@@ -29,6 +29,7 @@
         </svg>
         <span id="theme-label">Dark Mode</span>
       </button>
+      <div class="theme-dots"></div>
     </aside>
 
     <header class="topbar">
@@ -38,7 +39,7 @@
         </svg>
       </button>
       <span class="topbar-title">Novel Details</span>
-      <div></div>
+      <div class="theme-dots" style="display:none;"></div>
     </header>
 
     <main class="main-content">
@@ -71,6 +72,8 @@
   <script src="js/fetcher.js?v=20260727"></script>
   <script src="js/nav.js?v=20260727"></script>
   <script src="js/novel.js?v=20260727"></script>
+  <link rel="stylesheet" href="css/themes.css?v=20260727">
+  <script src="js/themes.js?v=20260727"></script>
   <script>
     // Theme toggle
     const themeToggle = document.getElementById('theme-toggle');

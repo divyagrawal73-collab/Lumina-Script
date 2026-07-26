@@ -7,10 +7,11 @@
 }
 
 :root {
-  /* Colors - Light Mode (Default) */
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-light: #e0e7ff;
+  /* Default Violet Theme - overridden by themes.css */
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --primary-light: #f5f3ff;
+  --primary-glow: rgba(139, 92, 246, 0.3);
   --surface: #f8f9ff;
   --surface-alt: #ffffff;
   --on-surface: #0f172a;
@@ -216,6 +217,43 @@ body {
 
 [data-theme="dark"] .theme-toggle .moon-icon {
   display: none;
+}
+
+/* Theme Color Dots */
+.theme-dots {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  flex-wrap: wrap;
+}
+
+.theme-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--outline);
+  background: var(--dot-color, var(--outline));
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.theme-dot:hover {
+  transform: scale(1.2);
+  border-color: var(--primary);
+}
+
+.theme-dot.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.theme-dot.active::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--primary);
 }
 
 /* Mobile Top App Bar */
@@ -1006,8 +1044,16 @@ body {
     display: none;
   }
 
+  .sidebar .theme-dots {
+    display: none;
+  }
+
   .topbar {
     display: flex;
+  }
+
+  .topbar .theme-dots {
+    display: flex !important;
   }
 
   .bottomnav {
