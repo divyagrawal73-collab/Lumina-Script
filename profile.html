@@ -279,6 +279,7 @@
   <script src="js/themes.js?v=20260727"></script>
   <script src="js/utils.js?v=20260727"></script>
   <script src="js/animations.js?v=20260727"></script>
+  <script src="js/streaks.js?v=20260727"></script>
   <script>
     const content = document.getElementById('profile-content');
 
@@ -339,6 +340,31 @@
             <div class="stat-label">Ratings</div>
           </div>
         </div>
+
+        <section class="streak-section">
+          <h2>Reading Streak</h2>
+          <div class="streak-stats">
+            <div class="streak-stat">
+              <div class="streak-stat-value" id="currentStreak">0 days</div>
+              <div class="streak-stat-label">Current Streak</div>
+            </div>
+            <div class="streak-stat">
+              <div class="streak-stat-value" id="longestStreak">0 days</div>
+              <div class="streak-stat-label">Longest Streak</div>
+            </div>
+            <div class="streak-stat">
+              <div class="streak-stat-value" id="totalPages">0</div>
+              <div class="streak-stat-label">Pages Read</div>
+            </div>
+            <div class="streak-stat">
+              <div class="streak-stat-value" id="readingSpeed">0 WPM</div>
+              <div class="streak-stat-label">Reading Speed</div>
+            </div>
+          </div>
+          <div class="heatmap-container">
+            <div id="readingHeatmap"></div>
+          </div>
+        </section>
 
         <div class="profile-section">
           <div class="profile-section-header">

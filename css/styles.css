@@ -1787,6 +1787,76 @@ body {
   transition: width var(--transition-smooth);
 }
 
+/* ==================== CALENDAR HEATMAP & STREAKS ==================== */
+
+/* Calendar Heatmap */
+.heatmap-container {
+  padding: var(--space-4);
+  overflow-x: auto;
+}
+
+.heatmap-svg {
+  display: block;
+}
+
+.heatmap-cell {
+  transition: opacity var(--transition-fast);
+}
+
+.heatmap-cell.read {
+  fill: var(--primary);
+}
+
+.heatmap-cell.unread {
+  fill: var(--outline);
+}
+
+.heatmap-cell:hover {
+  opacity: 0.8;
+  stroke: var(--on-surface);
+  stroke-width: 1;
+}
+
+.streak-section {
+  margin-bottom: 2rem;
+}
+
+.streak-section h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--on-surface);
+}
+
+/* Streak Stats */
+.streak-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.streak-stat {
+  text-align: center;
+  padding: var(--space-3);
+  background: var(--surface-alt);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--outline);
+}
+
+.streak-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  font-family: var(--font-display);
+}
+
+.streak-stat-label {
+  font-size: 0.75rem;
+  color: var(--on-surface-secondary);
+  margin-top: var(--space-1);
+}
+
 /* 3D Tilt Effect */
 .book-tilt {
   perspective: 800px;

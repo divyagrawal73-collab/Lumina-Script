@@ -69,6 +69,7 @@
     const chapter = chapters.find(c => c.id === chapterId);
     if (!chapter) return;
 
+    const startTime = Date.now();
     currentChapterId = chapterId;
     elements.chapterTitle.textContent = chapter.title;
     document.title = `${chapter.title} - Lumina Script`;
@@ -88,6 +89,11 @@
       await Storage.addToReadingHistory(novelId, chapterId);
     } catch (e) {
       console.warn('Failed to save reading progress:', e);
+    }
+
+    const elapsed = (Date.now() - startTime) / 60000; // minutes
+    if (typeof Streaks !== 'undefined') {
+      Streaks.trackReading(1, elapsed);
     }
   }
 
