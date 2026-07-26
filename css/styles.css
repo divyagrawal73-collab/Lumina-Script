@@ -1107,7 +1107,21 @@ body {
   transform: translateY(0);
 }
 
+/* Particle Canvas */
+#particleCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  #particleCanvas {
+    display: none;
+  }
   .skeleton-image,
   .skeleton-text {
     animation: none;
