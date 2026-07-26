@@ -755,4 +755,9 @@ const Storage = {
 };
 
 Storage.initTheme();
-Storage.init();
+try {
+  Storage.init();
+} catch (e) {
+  console.warn('Storage init failed, using localStorage fallback:', e);
+  Storage._fallback = true;
+}

@@ -2,7 +2,7 @@
 
 const Fetcher = {
   _novelsMeta: null,
-  _localNovelIds: ['6a0cb5634f942c668d69823e', '69faa859a5f4c7d1b734d496', '69fbe5ffa5f4c7d1b734d906'],
+  _localNovelIds: ['sky-pride', 'shadow-slave', 'swallowed-star'],
 
   // Load novels metadata from static file
   async getNovels() {

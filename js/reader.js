@@ -61,6 +61,7 @@
 
   async function loadChapters() {
     const response = await fetch(`/data/${novelId}/chapters.json`);
+    if (!response.ok) throw new Error('Failed to load chapters');
     chapters = await response.json();
   }
 
@@ -82,8 +83,12 @@
     elements.readingArea.scrollTop = 0;
     updateNavButtons();
     updateProgress(0);
-    await Storage.saveReadingProgress(novelId, chapterId);
-    await Storage.addToReadingHistory(novelId, chapterId);
+    try {
+      await Storage.saveReadingProgress(novelId, chapterId);
+      await Storage.addToReadingHistory(novelId, chapterId);
+    } catch (e) {
+      console.warn('Failed to save reading progress:', e);
+    }
   }
 
   function updateNavButtons() {

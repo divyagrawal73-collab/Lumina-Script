@@ -20,6 +20,7 @@
 
   async function init() {
     const novelId = getNovelId();
+    console.log('novel.js init - novelId:', novelId);
     if (!novelId) {
       window.location.href = '/';
       return;
@@ -58,17 +59,31 @@
   }
 
   async function loadChapters(novelId) {
+    console.log('Loading chapters from:', `/data/${novelId}/chapters.json`);
     const response = await fetch(`/data/${novelId}/chapters.json`);
+    console.log('Chapter response status:', response.status);
     if (!response.ok) throw new Error('Failed to load chapters');
     chapters = await response.json();
+    console.log('Loaded chapters:', chapters.length);
   }
 
   async function renderHeader() {
-    const progress = await Storage.getReadingProgress(novelData.id);
-    const readCount = progress.chaptersRead.length;
+    let readCount = 0;
+    let lastRead = 0;
+    let avgRating = { average: 0, count: 0 };
+    try {
+      const progress = await Storage.getReadingProgress(novelData.id);
+      readCount = progress.chaptersRead.length;
+      lastRead = progress.lastReadChapter;
+    } catch (e) {
+      console.warn('Failed to load reading progress:', e);
+    }
+    try {
+      avgRating = await Storage.getAverageRating(novelData.id);
+    } catch (e) {
+      console.warn('Failed to load average rating:', e);
+    }
     const total = chapters.length;
-    const lastRead = progress.lastReadChapter;
-    const avgRating = await Storage.getAverageRating(novelData.id);
 
     novelHeader.innerHTML = `
       <img src="${novelData.cover}" alt="${escapeHtml(novelData.title)}" class="novel-cover-large" onerror="this.style.background='var(--container-low)'">
@@ -134,9 +149,16 @@
       return;
     }
 
-    const currentStatus = await Storage.getNovelStatus(novelData.id);
-    const isFav = await Storage.isFavorite(novelData.id);
-    const userRating = await Storage.getRating(novelData.id);
+    let currentStatus = null;
+    let isFav = false;
+    let userRating = 0;
+    try {
+      currentStatus = await Storage.getNovelStatus(novelData.id);
+      isFav = await Storage.isFavorite(novelData.id);
+      userRating = await Storage.getRating(novelData.id);
+    } catch (e) {
+      console.warn('Failed to load user actions:', e);
+    }
 
     userActions.innerHTML = `
       <div class="action-group">
@@ -207,8 +229,14 @@
       return;
     }
 
-    const analytics = await Storage.getNovelAnalytics(novelData.id);
-    const progress = await Storage.getReadingProgress(novelData.id);
+    let analytics = { sessions: 0, totalTime: 0, lastReadAt: null };
+    let progress = { chaptersRead: [] };
+    try {
+      analytics = await Storage.getNovelAnalytics(novelData.id);
+      progress = await Storage.getReadingProgress(novelData.id);
+    } catch (e) {
+      console.warn('Failed to load analytics:', e);
+    }
     const readCount = progress.chaptersRead.length;
     const total = chapters.length;
     const percent = total > 0 ? ((readCount / total) * 100).toFixed(1) : 0;
@@ -271,7 +299,12 @@
 
   // ==================== CHAPTERS ====================
   async function renderChapters(page = 1) {
-    const progress = await Storage.getReadingProgress(novelData.id);
+    let progress = { chaptersRead: [] };
+    try {
+      progress = await Storage.getReadingProgress(novelData.id);
+    } catch (e) {
+      console.warn('Failed to load progress for chapters:', e);
+    }
     const filter = chapterSearch.value.toLowerCase();
 
     filteredChapters = chapters.filter(ch => 
