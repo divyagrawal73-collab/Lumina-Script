@@ -177,7 +177,7 @@
           <div class="rating-stars-input" id="rating-stars">
             ${[1,2,3,4,5].map(s => `
               <svg class="${s <= userRating ? 'active' : ''}" data-rating="${s}" viewBox="0 0 24 24">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                <polygon fill="currentColor" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
               </svg>
             `).join('')}
           </div>
@@ -211,6 +211,26 @@
       });
       document.getElementById('rating-text').textContent = rating + '/5';
       await renderHeader();
+    });
+
+    const ratingStars = document.getElementById('rating-stars');
+    ratingStars.addEventListener('mouseenter', (e) => {
+      const star = e.target.closest('svg');
+      if (!star) return;
+      const hoverRating = parseInt(star.dataset.rating);
+      ratingStars.querySelectorAll('svg').forEach((s, i) => {
+        if (i < hoverRating) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    });
+
+    ratingStars.addEventListener('mouseleave', () => {
+      ratingStars.querySelectorAll('svg').forEach((s, i) => {
+        s.classList.toggle('active', i < userRating);
+      });
     });
 
     document.getElementById('favorite-btn').addEventListener('click', async () => {
