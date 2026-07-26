@@ -750,6 +750,31 @@ body {
   height: 18px;
 }
 
+/* Novel Tags */
+.novel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: var(--space-3);
+}
+
+.tag-chip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--primary-glow);
+  transition: all var(--transition-fast);
+}
+
+.tag-chip:hover {
+  background: var(--primary);
+  color: white;
+}
+
 /* Chapter List */
 .chapter-list-header {
   padding: 1rem 0;
