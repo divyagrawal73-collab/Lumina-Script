@@ -16,18 +16,25 @@
   }
 
   async function loadNovels() {
+    Animations.showSkeleton(novelGrid, () => `
+      <div class="skeleton-card">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-text"></div>
+        <div class="skeleton-text short"></div>
+      </div>
+    `, 6);
     try {
       const response = await fetch('/data/novels.json?v=20260727');
       if (!response.ok) throw new Error('Failed to load novels');
       novels = await response.json();
       renderNovels(novels);
     } catch (error) {
-      novelGrid.innerHTML = `<div class="error">Error loading novels: ${error.message}</div>`;
+      Animations.hideSkeleton(novelGrid, `<div class="error">Error loading novels: ${error.message}</div>`);
     }
   }
 
   function renderNovels(list) {
-    novelGrid.innerHTML = list.map(novel => `
+    const gridHTML = list.map(novel => `
       <a href="/novel.html?id=${novel.id}" class="book-card">
         <div class="book-cover-wrapper">
           <img src="${novel.cover}" alt="${escapeHtml(novel.title)}" class="book-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -37,6 +44,7 @@
         <div class="book-author">${escapeHtml(novel.author)}</div>
       </a>
     `).join('');
+    Animations.hideSkeleton(novelGrid, gridHTML);
   }
 
   async function renderContinueReading() {

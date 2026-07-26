@@ -74,8 +74,8 @@
         <div class="section-header">
           <h2 class="section-title">Your Library</h2>
         </div>
-        <div class="book-grid" id="novel-grid">
-          <!-- Novel cards loaded by JS -->
+        <div class="book-grid skeleton-loading" id="novel-grid">
+          <!-- Skeleton cards will show initially, replaced by real content -->
         </div>
       </section>
     </main>
@@ -91,6 +91,7 @@
   <script src="js/app.js?v=20260727"></script>
   <link rel="stylesheet" href="css/themes.css?v=20260727">
   <script src="js/themes.js?v=20260727"></script>
+  <script src="js/animations.js?v=20260727"></script>
   <script>
     // Theme toggle
     const themeToggle = document.getElementById('theme-toggle');

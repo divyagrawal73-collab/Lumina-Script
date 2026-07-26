@@ -1037,6 +1037,88 @@ body {
   outline-offset: 2px;
 }
 
+/* ==================== SKELETON LOADING ==================== */
+
+.skeleton-loading {
+  pointer-events: none;
+}
+
+.skeleton-card {
+  background: var(--surface-alt);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4, 1rem);
+  border: 1px solid var(--outline);
+}
+
+.skeleton-image {
+  width: 100%;
+  aspect-ratio: 2/3;
+  background: linear-gradient(90deg, var(--outline) 25%, var(--container-low) 50%, var(--outline) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-md, var(--radius));
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.skeleton-text {
+  height: 1rem;
+  background: linear-gradient(90deg, var(--outline) 25%, var(--container-low) 50%, var(--outline) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm, 4px);
+  margin-bottom: var(--space-2, 0.5rem);
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ==================== PAGE TRANSITIONS ==================== */
+
+.page-enter {
+  opacity: 0;
+}
+
+.page-enter-active {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* ==================== SCROLL ANIMATIONS ==================== */
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.animate-on-scroll.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-image,
+  .skeleton-text {
+    animation: none;
+  }
+  .page-enter,
+  .page-enter-active {
+    transition: none;
+    opacity: 1;
+  }
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ==================== RESPONSIVE ==================== */
 
 @media (max-width: 768px) {

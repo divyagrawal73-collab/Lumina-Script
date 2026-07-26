@@ -300,6 +300,12 @@
 
   // ==================== CHAPTERS ====================
   async function renderChapters(page = 1) {
+    Animations.showSkeleton(chapterList, () => `
+      <div class="skeleton-card" style="padding: var(--space-3, 0.75rem);">
+        <div class="skeleton-text"></div>
+        <div class="skeleton-text short"></div>
+      </div>
+    `, 10);
     let progress = { chaptersRead: [] };
     try {
       progress = await Storage.getReadingProgress(novelData.id);
@@ -319,12 +325,13 @@
     const end = start + CHAPTERS_PER_PAGE;
     const batch = filteredChapters.slice(start, end);
 
-    chapterList.innerHTML = batch.map(ch => `
+    const chaptersHTML = batch.map(ch => `
       <a href="/reader.html?novel=${novelData.id}&chapter=${ch.id}" class="chapter-item ${progress.chaptersRead.includes(ch.id) ? 'read' : ''}">
         <span class="chapter-number">${ch.id}</span>
         <span class="chapter-title">${escapeHtml(ch.title)}</span>
       </a>
     `).join('');
+    Animations.hideSkeleton(chapterList, chaptersHTML);
 
     chapterListInfo.textContent = `Showing ${start + 1}-${Math.min(end, filteredChapters.length)} of ${filteredChapters.length} chapters`;
 
