@@ -22,7 +22,7 @@
         <div class="skeleton-text short"></div>
     `, 6);
     try {
-      const response = await fetch('/data/novels.json?v=20260727');
+      const response = await fetch('/data/novels.json?v=20260727b');
       if (!response.ok) throw new Error('Failed to load novels');
       novels = await response.json();
       renderNovels(novels);

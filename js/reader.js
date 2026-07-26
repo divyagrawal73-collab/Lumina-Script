@@ -60,7 +60,7 @@
   }
 
   async function loadNovelData() {
-    const response = await fetch('/data/novels.json?v=20260727');
+    const response = await fetch('/data/novels.json?v=20260727b');
     const novels = await response.json();
     novelData = novels.find(n => n.id === novelId);
   }

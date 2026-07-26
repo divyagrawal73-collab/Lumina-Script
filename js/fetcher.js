@@ -11,7 +11,7 @@ const Fetcher = {
   async getNovels() {
     if (this._novelsMeta) return this._novelsMeta;
     try {
-      const res = await fetch('/data/novels.json?v=20260727');
+      const res = await fetch('/data/novels.json?v=20260727b');
       if (!res.ok) throw new Error('Failed to load novels');
       this._novelsMeta = await res.json();
       return this._novelsMeta;
