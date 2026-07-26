@@ -278,8 +278,12 @@
 
     elements.readingArea.addEventListener('scroll', () => {
       const el = elements.readingArea;
-      const progress = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
-      updateProgress(Math.min(100, Math.max(0, progress)));
+      if (el.scrollHeight > el.clientHeight) {
+        const progress = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+        updateProgress(Math.min(100, Math.max(0, progress)));
+      } else {
+        updateProgress(100);
+      }
     });
 
     elements.bookmarkBtn.addEventListener('click', async () => {
