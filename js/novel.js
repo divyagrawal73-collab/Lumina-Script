@@ -114,6 +114,7 @@
           ` : ''}
         </div>
         <p class="novel-description">${escapeHtml(novelData.description)}</p>
+        <div id="novel-tags" class="novel-tags"></div>
         <div class="novel-actions">
           ${lastRead > 0 
             ? `<a href="/reader.html?novel=${novelData.id}&chapter=${lastRead}" class="btn btn-primary">
@@ -132,6 +133,13 @@
         </div>
       </div>
     `;
+
+    const tagsContainer = document.getElementById('novel-tags');
+    if (tagsContainer && novelData.tags && novelData.tags.length > 0) {
+      tagsContainer.innerHTML = novelData.tags.map(tag => 
+        `<span class="tag-chip">${escapeHtml(tag)}</span>`
+      ).join('');
+    }
   }
 
   async function renderUserActions() {

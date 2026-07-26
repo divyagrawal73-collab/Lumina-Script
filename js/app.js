@@ -44,6 +44,7 @@
         </div>
         <div class="book-title">${escapeHtml(novel.title)}</div>
         <div class="book-author">${escapeHtml(novel.author)}</div>
+        ${novel.tags && novel.tags.length > 0 ? `<div class="card-tags">${novel.tags.slice(0, 3).map(t => `<span class="card-tag">${escapeHtml(t)}</span>`).join('')}${novel.tags.length > 3 ? `<span class="card-tag more">+${novel.tags.length - 3}</span>` : ''}</div>` : ''}
       </a>
     `).join('');
     Animations.hideSkeleton(novelGrid, gridHTML);

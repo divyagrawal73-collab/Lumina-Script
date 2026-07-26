@@ -610,6 +610,29 @@ body {
   color: var(--on-surface-secondary);
 }
 
+/* Card Tags */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: var(--space-1);
+}
+
+.card-tag {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.card-tag.more {
+  background: var(--outline);
+  color: var(--on-surface-secondary);
+}
+
 /* ==================== NOVEL DETAIL PAGE ==================== */
 
 .novel-hero {
