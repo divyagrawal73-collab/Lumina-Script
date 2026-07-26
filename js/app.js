@@ -17,7 +17,7 @@
 
   async function loadNovels() {
     try {
-      const response = await fetch('/data/novels.json');
+      const response = await fetch('/data/novels.json?v=20260727');
       if (!response.ok) throw new Error('Failed to load novels');
       novels = await response.json();
       renderNovels(novels);

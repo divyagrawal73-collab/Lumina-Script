@@ -8,7 +8,7 @@ const Fetcher = {
   async getNovels() {
     if (this._novelsMeta) return this._novelsMeta;
     try {
-      const res = await fetch('/data/novels.json');
+      const res = await fetch('/data/novels.json?v=20260727');
       if (!res.ok) throw new Error('Failed to load novels');
       this._novelsMeta = await res.json();
       return this._novelsMeta;
@@ -23,7 +23,7 @@ const Fetcher = {
     // Check if we have a local static file
     if (this._localNovelIds.includes(novelId)) {
       try {
-        const res = await fetch(`/data/${novelId}/chapters.json`);
+        const res = await fetch(`/data/${novelId}/chapters.json?v=20260727`);
         if (res.ok) {
           const chapters = await res.json();
           return { chapters, source: 'static' };
@@ -53,7 +53,7 @@ const Fetcher = {
     // We need to extract it from the full chapter list
     if (this._localNovelIds.includes(novelId)) {
       try {
-        const res = await fetch(`/data/${novelId}/chapters.json`);
+        const res = await fetch(`/data/${novelId}/chapters.json?v=20260727`);
         if (res.ok) {
           const chapters = await res.json();
           const chapter = chapters.find(c => c.id === parseInt(chapterId) || c.id === chapterId);

@@ -447,7 +447,7 @@
       `).join('');
     }
 
-    fetch('/data/novels.json')
+    fetch('/data/novels.json?v=20260727')
       .then(r => r.json())
       .then(data => { window.__novels = data; renderProfile(); })
       .catch(() => { window.__novels = []; renderProfile(); });

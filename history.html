@@ -136,7 +136,7 @@
         return;
       }
 
-      fetch('/data/novels.json')
+      fetch('/data/novels.json?v=20260727')
         .then(r => r.json())
         .then(async (novels) => {
           const items = await Promise.all(history.map(async (h) => {

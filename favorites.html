@@ -92,7 +92,7 @@
         return;
       }
 
-      fetch('/data/novels.json')
+      fetch('/data/novels.json?v=20260727')
         .then(r => r.json())
         .then(novels => {
           const favNovels = novels.filter(n => favorites.includes(n.id));
