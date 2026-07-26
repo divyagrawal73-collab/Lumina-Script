@@ -145,17 +145,20 @@
         .then(r => r.json())
         .then(async (novels) => {
           const items = await Promise.all(history.map(async (h) => {
-            const novel = novels.find(n => n.id === h.novelId);
+            const novelId = h.novel_id || h.novelId;
+            const chapterId = h.chapter_id || h.chapterId;
+            const readAt = h.read_at || h.readAt;
+            const novel = novels.find(n => n.id === novelId);
             if (!novel) return '';
-            const progress = await Storage.getReadingProgress(h.novelId);
+            const totalChapters = novel.chapters ? novel.chapters.length : 0;
             return `
-              <a href="/reader.html?novel=${h.novelId}&chapter=${h.chapterId}" class="history-item">
+              <a href="/reader.html?novel=${novelId}&chapter=${chapterId}" class="history-item">
                 <img class="history-cover" src="${novel.cover}" alt="${novel.title}" onerror="this.style.display='none'">
                 <div class="history-info">
                   <div class="history-title">${novel.title}</div>
-                  <div class="history-meta">Chapter ${h.chapterId} of ${progress.chaptersRead.length} read</div>
+                  <div class="history-meta">Chapter ${chapterId} of ${totalChapters} read</div>
                 </div>
-                <span class="history-time">${timeAgo(h.read_at)}</span>
+                <span class="history-time">${timeAgo(readAt)}</span>
               </a>
             `;
           }));
