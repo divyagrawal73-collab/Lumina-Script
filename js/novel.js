@@ -311,7 +311,7 @@
     } catch (e) {
       console.warn('Failed to load progress for chapters:', e);
     }
-    const filter = chapterSearch.value.toLowerCase();
+    const filter = chapterSearch ? chapterSearch.value.toLowerCase() : '';
 
     filteredChapters = chapters.filter(ch => 
       !filter || ch.title.toLowerCase().includes(filter)
