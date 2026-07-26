@@ -5,12 +5,12 @@ const ThemeManager = {
   _dark: false,
 
   THEMES: [
-    { id: 'violet', name: 'Violet', emoji: '✨' },
-    { id: 'sakura', name: 'Sakura', emoji: '🌸' },
-    { id: 'ocean', name: 'Ocean', emoji: '🌊' },
-    { id: 'sunset', name: 'Sunset', emoji: '🌅' },
-    { id: 'forest', name: 'Forest', emoji: '🌲' },
-    { id: 'neon', name: 'Neon', emoji: '⚡' },
+    { id: 'violet', name: 'Violet', emoji: '✨', color: '#8b5cf6' },
+    { id: 'sakura', name: 'Sakura', emoji: '🌸', color: '#ec4899' },
+    { id: 'ocean', name: 'Ocean', emoji: '🌊', color: '#0ea5e9' },
+    { id: 'sunset', name: 'Sunset', emoji: '🌅', color: '#f97316' },
+    { id: 'forest', name: 'Forest', emoji: '🌲', color: '#22c55e' },
+    { id: 'neon', name: 'Neon', emoji: '⚡', color: '#06b6d4' },
   ],
 
   init() {
@@ -50,7 +50,7 @@ const ThemeManager = {
         <button class="theme-dot ${t.id === this._current ? 'active' : ''}"
                 data-theme-id="${t.id}"
                 title="${t.name}"
-                style="--dot-color: var(--${t.id === this._current ? 'primary' : 'outline'})"
+                style="background: ${t.color}"
                 aria-label="${t.name} theme">
         </button>
       `).join('');
