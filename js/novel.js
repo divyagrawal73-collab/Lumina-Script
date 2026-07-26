@@ -20,7 +20,7 @@
 
   async function init() {
     const novelId = getNovelId();
-    console.log('novel.js init - novelId:', novelId);
+
     if (!novelId) {
       window.location.href = '/';
       return;
@@ -60,12 +60,10 @@
 
   async function loadChapters(novelId) {
     const url = `/data/${novelId}/chapters.json?v=20260727`;
-    console.log('Loading chapters from:', url);
     const response = await fetch(url);
-    console.log('Chapter response status:', response.status);
     if (!response.ok) throw new Error('Failed to load chapters');
     chapters = await response.json();
-    console.log('Loaded chapters:', chapters.length);
+
   }
 
   async function renderHeader() {
@@ -301,10 +299,8 @@
   // ==================== CHAPTERS ====================
   async function renderChapters(page = 1) {
     Animations.showSkeleton(chapterList, () => `
-      <div class="skeleton-card" style="padding: var(--space-3, 0.75rem);">
         <div class="skeleton-text"></div>
         <div class="skeleton-text short"></div>
-      </div>
     `, 10);
     let progress = { chaptersRead: [] };
     try {
@@ -492,12 +488,6 @@
     const days = Math.floor(hours / 24);
     if (days < 30) return days + 'd ago';
     return new Date(dateStr).toLocaleDateString();
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 
   function bindEvents() {

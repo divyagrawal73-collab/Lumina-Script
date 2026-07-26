@@ -17,11 +17,9 @@
 
   async function loadNovels() {
     Animations.showSkeleton(novelGrid, () => `
-      <div class="skeleton-card">
         <div class="skeleton-image"></div>
         <div class="skeleton-text"></div>
         <div class="skeleton-text short"></div>
-      </div>
     `, 6);
     try {
       const response = await fetch('/data/novels.json?v=20260727');
@@ -83,12 +81,6 @@
         </div>
       </a>
     `;
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 
   function debounce(func, wait) {
