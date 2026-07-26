@@ -29,9 +29,11 @@ const ThemeManager = {
   },
 
   toggleDark() {
-    this._dark = !this._dark;
-    localStorage.setItem('ls_theme', this._dark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', this._dark ? 'dark' : 'light');
+    const current = localStorage.getItem('ls_theme') === 'dark';
+    const next = !current;
+    localStorage.setItem('ls_theme', next ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
+    this._dark = next;
     this._renderDots();
   },
 
@@ -40,6 +42,7 @@ const ThemeManager = {
 
   _apply() {
     document.documentElement.setAttribute('data-color', this._current);
+    this._dark = localStorage.getItem('ls_theme') === 'dark';
     document.documentElement.setAttribute('data-theme', this._dark ? 'dark' : 'light');
   },
 

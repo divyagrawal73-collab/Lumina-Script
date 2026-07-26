@@ -51,6 +51,10 @@ const Storage = {
   },
 
   toggleTheme() {
+    if (typeof ThemeManager !== 'undefined') {
+      ThemeManager.toggleDark();
+      return ThemeManager.isDark() ? 'dark' : 'light';
+    }
     const next = this.getTheme() === 'light' ? 'dark' : 'light';
     this.setTheme(next);
     return next;
