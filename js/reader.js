@@ -37,8 +37,14 @@
       return;
     }
 
-    await loadNovelData();
-    await loadChapters();
+    try {
+      await loadNovelData();
+      await loadChapters();
+    } catch (e) {
+      console.error('Failed to load novel data:', e);
+      elements.chapterContent.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--on-surface-secondary);">Failed to load novel data. Please check your connection and try again.</p>';
+      return;
+    }
     loadSettings();
     await loadChapter(currentChapterId);
     bindEvents();
@@ -306,6 +312,8 @@
     elements.lineHeight.addEventListener('input', (e) => applyLineHeight(e.target.value));
 
     document.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
       if (e.key === 'ArrowLeft' && currentChapterId > 1) loadChapter(currentChapterId - 1);
       if (e.key === 'ArrowRight' && currentChapterId < chapters.length) loadChapter(currentChapterId + 1);
       if (e.key === 'Escape') toggleSettings();

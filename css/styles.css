@@ -475,7 +475,7 @@ body {
 
 .hero-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 12px 40px var(--primary-glow);
 }
 
 .hero-cover {
@@ -1013,6 +1013,22 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
+.setting-group input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid var(--surface-alt);
+  box-shadow: var(--shadow-sm);
+}
+
+.setting-group input[type="range"]::-moz-range-track {
+  background: var(--outline);
+  height: 6px;
+  border-radius: 3px;
+}
+
 /* Reading Modes */
 .reading-modes {
   display: flex;
@@ -1432,7 +1448,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: white;
   font-size: 0.875rem;
   font-weight: 700;
@@ -1592,7 +1608,7 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: white;
   font-size: 0.875rem;
   font-weight: 700;
@@ -1849,7 +1865,7 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--primary);
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
 }
 
 .streak-stat-label {
