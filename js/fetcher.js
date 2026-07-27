@@ -88,7 +88,8 @@ const Fetcher = {
       const res = await fetch(`/api/proxy/novel/${apiId}/chapter/${chapterId}`);
       if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
-      return data.content || data.chapter_content || '';
+      // API returns { novel: {...}, chapter: { number, name, content } }
+      return data.chapter?.content || data.content || data.chapter_content || '';
     } catch (e) {
       console.error(`Failed to fetch chapter content for ${novelId} ch.${chapterId}:`, e);
       return null;
