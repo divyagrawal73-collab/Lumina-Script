@@ -290,6 +290,18 @@ body {
   color: var(--primary);
 }
 
+.topbar-center {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 0.5rem;
+}
+
+.topbar .theme-dots {
+  display: none;
+}
+
 .topbar-actions {
   display: flex;
   gap: 0.5rem;
@@ -1414,8 +1426,16 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex-shrink: 1;
+    flex: 1;
     min-width: 0;
+  }
+
+  .topbar-center {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    gap: 0.5rem;
   }
 
   .topbar .theme-dots {
