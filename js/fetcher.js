@@ -2,9 +2,11 @@
 
 const Fetcher = {
   _novelsMeta: null,
-  _localNovelIds: ['sky-pride', 'shadow-slave', 'swallowed-star', 'lord-of-the-mysteries'],
+  _localNovelIds: ['sky-pride', 'shadow-slave', 'swallowed-star', 'lord-of-the-mysteries', 'warlock-of-the-magus-world', 'swallowed-star-2'],
   _apiNovelIds: {
-    'lord-of-the-mysteries': '69faadd3a5f4c7d1b734d49f'
+    'lord-of-the-mysteries': '69faadd3a5f4c7d1b734d49f',
+    'warlock-of-the-magus-world': '6a163d1a4f942c668d69a5b4',
+    'swallowed-star-2': '69ff4ce4a5f4c7d1b734e1dc'
   },
 
   // Load novels metadata from static file

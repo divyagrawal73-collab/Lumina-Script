@@ -39,5 +39,27 @@
     "sourceUrl": "https://novelarchive.cc/novel/69faadd3a5f4c7d1b734d49f",
     "tags": ["Drama", "Horror", "Mature", "Mystery", "Psychological", "Seinen", "Supernatural", "Xuanhuan"],
     "apiId": "69faadd3a5f4c7d1b734d49f"
+  },
+  {
+    "id": "warlock-of-the-magus-world",
+    "title": "Warlock of the Magus World",
+    "author": "The Plagiarist",
+    "cover": "https://novelarchive.cc/api/novels/6a163d1a4f942c668d69a5b4/cover?w=640&q=72&format=webp",
+    "description": "When a futuristic scientist is transported into the body of a young man in a fantasy world, his curiosity and desire for power push him to pursue magic. In a world without mercy, Leylin has no qualms about doing anything if it means benefits. He is cold, ruthless and calculating, never forming attachments that could impede his ultimate goal.",
+    "chapterCount": 1200,
+    "sourceUrl": "https://novelarchive.cc/novel/6a163d1a4f942c668d69a5b4",
+    "tags": ["Adventure", "Horror", "Mature", "Mystery", "Seinen", "Supernatural", "Xuanhuan"],
+    "apiId": "6a163d1a4f942c668d69a5b4"
+  },
+  {
+    "id": "swallowed-star-2",
+    "title": "Swallowed Star 2: Land of Origin",
+    "author": "I Eat Tomatoes",
+    "cover": "https://novelarchive.cc/api/novels/69ff4ce4a5f4c7d1b734e1dc/cover?w=640&q=72&format=webp",
+    "description": "Luo Feng, accompanied by Boundary Beast Morosa, traversed reincarnation and arrived at the Origin Continent.",
+    "chapterCount": 498,
+    "sourceUrl": "https://novelarchive.cc/novel/69ff4ce4a5f4c7d1b734e1dc",
+    "tags": ["Action", "Adventure", "Fantasy", "Martial Arts"],
+    "apiId": "69ff4ce4a5f4c7d1b734e1dc"
   }
 ]
