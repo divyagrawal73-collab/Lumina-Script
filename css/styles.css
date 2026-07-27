@@ -246,6 +246,10 @@ body {
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  background-clip: content-box;
 }
 
 .theme-dot:hover {
@@ -1722,7 +1726,7 @@ body {
   color: var(--on-surface-secondary);
   font-size: 0.75rem;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.625rem;
   transition: color var(--transition-fast);
 }
 
@@ -1745,7 +1749,7 @@ body {
   color: var(--on-surface-secondary);
   font-size: 0.75rem;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.625rem;
   transition: color var(--transition-fast);
 }
 
@@ -1806,7 +1810,7 @@ body {
   border: none;
   color: var(--on-surface-secondary);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.625rem;
   border-radius: var(--radius);
   transition: all var(--transition-fast);
 }
