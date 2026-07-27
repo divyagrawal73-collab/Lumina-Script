@@ -272,6 +272,7 @@ body {
   top: 0;
   z-index: 100;
   padding: 1rem 1.25rem;
+  padding-top: calc(1rem + env(safe-area-inset-top, 0));
   background: var(--surface-alt);
   border-bottom: 1px solid var(--outline);
   display: none;
@@ -327,7 +328,7 @@ body {
   align-items: center;
   justify-content: space-around;
   z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .bottomnav-item {
@@ -1205,13 +1206,11 @@ body {
 }
 
 .error {
-  padding: 2rem;
-  text-align: center;
-  color: var(--error);
   background: var(--error-light);
-  margin: 1.5rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: var(--space-3);
+  border-radius: var(--radius);
 }
 
 .empty-state {
@@ -1353,7 +1352,10 @@ body {
     height: 100vh;
     z-index: 200;
     transition: left 0.3s ease;
-    display: block !important;
+    display: flex !important;
+    flex-direction: column;
+    background: var(--surface-alt);
+    border-right: 1px solid var(--outline);
   }
 
   .sidebar.open {
