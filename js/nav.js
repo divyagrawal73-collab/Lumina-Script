@@ -91,8 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Mobile sidebar toggle
 function toggleSidebar() {
   const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
   if (sidebar) {
     sidebar.classList.toggle('open');
+    if (overlay) {
+      overlay.classList.toggle('active', sidebar.classList.contains('open'));
+    }
   }
 }
 
@@ -100,8 +104,10 @@ function toggleSidebar() {
 document.addEventListener('click', (e) => {
   const sidebar = document.querySelector('.sidebar');
   const hamburger = document.querySelector('.hamburger-btn');
+  const overlay = document.querySelector('.sidebar-overlay');
   if (sidebar && sidebar.classList.contains('open') &&
       !sidebar.contains(e.target) && !hamburger?.contains(e.target)) {
     sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
   }
 });

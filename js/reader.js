@@ -303,6 +303,16 @@
       }
     });
 
+    // Tap reading area to open settings (desktop and mobile)
+    elements.readingArea.addEventListener('click', (e) => {
+      // Don't trigger on links, buttons, or text selection
+      if (e.target.closest('a, button, input, textarea, .comment-form, .chapter-comments')) return;
+      // Don't trigger if user selected text
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) return;
+      toggleSettings();
+    });
+
     elements.bookmarkBtn.addEventListener('click', async () => {
       if (!Storage.isLoggedIn()) { window.location.href = '/login.html'; return; }
       const isBookmarked = await Storage.isChapterBookmarked(novelId, currentChapterId);
@@ -314,7 +324,10 @@
       await updateBookmarkBtn();
     });
 
-    elements.settingsBtn.addEventListener('click', toggleSettings);
+    elements.settingsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSettings();
+    });
     elements.closeSettings.addEventListener('click', toggleSettings);
     elements.settingsOverlay.addEventListener('click', toggleSettings);
 
