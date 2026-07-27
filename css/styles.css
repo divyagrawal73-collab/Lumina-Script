@@ -1,5 +1,9 @@
 /* css/styles.css - Lumina Script Design System */
 
+html {
+  scroll-behavior: smooth;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -363,7 +367,7 @@ body {
   flex: 1;
   margin-left: var(--sidebar-width);
   padding: 2rem;
-  max-width: calc(100% - var(--sidebar-width));
+  max-width: min(calc(100% - var(--sidebar-width)), 1400px);
 }
 
 /* ==================== LIBRARY / HOME PAGE ==================== */
@@ -535,7 +539,7 @@ body {
 /* Book Grid */
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2.5rem;
 }
@@ -936,6 +940,8 @@ body {
 
 .chapter-content p {
   margin-bottom: 1.5em;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .reader-bottombar {
@@ -1022,6 +1028,23 @@ body {
 
 .settings-panel.open {
   transform: translateY(0);
+}
+
+@media (min-width: 769px) {
+  .settings-panel {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    transform: translate(-50%, -50%) translateY(100%);
+    width: 400px;
+    max-height: 80vh;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--outline);
+  }
+  .settings-panel.open {
+    transform: translate(-50%, -50%);
+  }
 }
 
 .settings-header {
