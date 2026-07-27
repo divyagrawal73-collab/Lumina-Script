@@ -1161,8 +1161,9 @@ body {
 
 /* Sepia Mode */
 .mode-sepia {
-  background: #fdf6e3 !important;
-  color: #5c4a32 !important;
+  background: var(--surface) !important;
+  color: var(--on-surface) !important;
+  filter: sepia(0.3) brightness(1.05);
 }
 
 /* Focus Mode - dims everything except current paragraph */
@@ -1559,16 +1560,13 @@ body {
   width: 24px;
   height: 24px;
   cursor: pointer;
-  color: #d1d5db;
+  color: var(--outline);
   transition: color var(--transition-fast);
 }
 
-.rating-stars-input svg.active {
-  color: #f59e0b;
-}
-
+.rating-stars-input svg.active,
 .rating-stars-input svg:hover {
-  color: #f59e0b;
+  color: #f59e0b; /* Keep amber for stars - intentional */
 }
 
 .rating-label {
@@ -2160,5 +2158,158 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .achievement-toast {
     transition: none;
+  }
+}
+
+/* ==================== TABLET RESPONSIVE ==================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    margin-left: var(--sidebar-width);
+    padding: 1.5rem;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  /* Typography */
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .novel-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 1rem;
+  }
+
+  /* Book grid */
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* Novel page */
+  .novel-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .novel-meta {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .novel-actions {
+    justify-content: center;
+  }
+
+  /* Comments */
+  .comment-form {
+    padding: 0.75rem;
+  }
+
+  .comment-textarea {
+    min-height: 80px;
+  }
+
+  /* Analytics */
+  .analytics-card {
+    padding: 1rem;
+  }
+
+  .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* Profile stats */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Achievement badges */
+  .achievements-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+
+  /* Reader */
+  .reading-area {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .reader-bottombar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Chapter content */
+  .chapter-content p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+}
+
+/* ==================== SMALL PHONE RESPONSIVE ==================== */
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .novel-title {
+    font-size: 1.25rem;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .novel-cover-large {
+    width: 120px;
+    height: 168px;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-cover {
+    width: 60px;
+    height: 84px;
+  }
+
+  .reading-area {
+    padding: 1rem 0.5rem;
+  }
+
+  .chapter-content p {
+    font-size: 0.95rem;
   }
 }
