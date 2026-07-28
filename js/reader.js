@@ -78,14 +78,24 @@
   }
 
   async function loadNovelData() {
-    const response = await fetch('/data/novels.json?v=20260727b');
-    const novels = await response.json();
-    novelData = novels.find(n => n.id === novelId);
+    try {
+      const novels = await Fetcher.getNovels();
+      novelData = novels.find(n => n.id === novelId || n.apiId === novelId);
+    } catch (e) {
+      console.warn('Local novel data not found, will use API');
+    }
+    // For API novels not in local list, create minimal metadata
+    if (!novelData) {
+      novelData = { id: novelId, apiId: novelId, title: 'Loading...' };
+    }
   }
 
   async function loadChapters() {
     const result = await Fetcher.getChapterList(novelId);
-    chapters = result.chapters;
+    chapters = result.chapters || [];
+    if (chapters.length === 0) {
+      throw new Error('No chapters found');
+    }
   }
 
   async function loadChapter(chapterId) {
