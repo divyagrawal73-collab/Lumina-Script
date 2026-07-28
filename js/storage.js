@@ -69,7 +69,7 @@ const Storage = {
   // ==================== READING SETTINGS (localStorage only) ====================
   getReadingSettings() {
     const s = localStorage.getItem('ls_readingSettings');
-    return s ? JSON.parse(s) : { fontFamily: "'EB Garamond', serif", fontSize: 18, lineHeight: 1.8 };
+    return s ? JSON.parse(s) : { fontFamily: "'EB Garamond', serif", fontSize: 18, lineHeight: 1.8, textWidth: 800 };
   },
 
   saveReadingSettings(settings) {
@@ -180,7 +180,7 @@ const Storage = {
 
     const { data } = await this._supabase
       .from('reading_progress')
-      .select('novel_id, last_read_chapter, chapters_read')
+      .select('novel_id, last_read_chapter, chapters_read, updated_at')
       .eq('user_id', user.id);
 
     const result = {};
@@ -188,7 +188,8 @@ const Storage = {
       data.forEach(row => {
         result[row.novel_id] = {
           lastReadChapter: row.last_read_chapter || 0,
-          chaptersRead: row.chapters_read || []
+          chaptersRead: row.chapters_read || [],
+          lastReadAt: row.updated_at || ''
         };
       });
     }
@@ -435,13 +436,18 @@ const Storage = {
     const user = await this._ensureUser();
     if (!user) return;
 
-    // Upsert: update if exists, insert if not
-    await this._supabase.from('reading_history').upsert({
+    // Delete old entry for this novel, then insert fresh
+    await this._supabase.from('reading_history')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('novel_id', novelId);
+
+    await this._supabase.from('reading_history').insert({
       user_id: user.id,
       novel_id: novelId,
       chapter_id: chapterId,
       read_at: new Date().toISOString()
-    }, { onConflict: 'user_id,novel_id' });
+    });
   },
 
   async clearReadingHistory() {
@@ -544,7 +550,6 @@ const Storage = {
     const progress = await this.getAllReadingProgress();
     const statuses = await this.getAllNovelStatuses();
     const ratings = await this.getAllRatings();
-    const history = await this.getReadingHistory();
 
     return {
       novelsRead: Object.keys(progress).filter(id => progress[id].chaptersRead.length > 0).length,
@@ -554,7 +559,7 @@ const Storage = {
       dropped: Object.values(statuses).filter(s => s === 'dropped').length,
       completed: Object.values(statuses).filter(s => s === 'completed').length,
       ratingsCount: Object.keys(ratings).length,
-      historyCount: history.length
+      historyCount: Object.keys(progress).filter(id => progress[id].chaptersRead.length > 0).length
     };
   },
 
@@ -612,6 +617,7 @@ const Storage = {
     const p = this._localGet('ls_readingProgress', {});
     if (!p[novelId]) p[novelId] = { lastReadChapter: 0, chaptersRead: [] };
     p[novelId].lastReadChapter = chapterId;
+    p[novelId].lastReadAt = new Date().toISOString();
     if (!p[novelId].chaptersRead.includes(chapterId)) p[novelId].chaptersRead.push(chapterId);
     this._localSet('ls_readingProgress', p);
   },

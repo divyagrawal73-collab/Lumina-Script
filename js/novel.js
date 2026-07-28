@@ -48,11 +48,14 @@
 
       titleEl.textContent = `${novelData.title} - Lumina Script`;
       await loadChapters(novelId);
+      window._downloadChapters = chapters;
+      window._downloadNovelTitle = novelData.title;
       await renderHeader();
       await renderUserActions();
       await renderAnalytics();
       renderChapters();
       await renderComments();
+      if (typeof DownloadManager !== 'undefined') DownloadManager.init();
     } catch (error) {
       novelHeader.innerHTML = `<div class="error">Error: ${error.message}</div>`;
     }
@@ -184,7 +187,7 @@
         <div class="rating-input">
           <div class="rating-stars-input" id="rating-stars">
             ${[1,2,3,4,5].map(s => `
-              <svg class="${s <= userRating ? 'active' : ''}" data-rating="${s}" viewBox="0 0 24 24">
+              <svg class="${s <= userRating ? 'active' : ''}" data-rating="${s}" viewBox="0 0 24 24" role="button" aria-label="Rate ${s} star${s > 1 ? 's' : ''}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                 <polygon fill="currentColor" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
               </svg>
             `).join('')}
@@ -356,6 +359,13 @@
       <a href="/reader.html?novel=${novelData.id}&chapter=${ch.id}" class="chapter-item ${progress.chaptersRead.includes(ch.id) ? 'read' : ''}">
         <span class="chapter-number">${ch.id}</span>
         <span class="chapter-title">${escapeHtml(ch.title)}</span>
+        <button class="chapter-download-btn" data-chapter-id="${ch.id}" title="Download as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </button>
       </a>
     `).join('');
     Animations.hideSkeleton(chapterList, chaptersHTML);
@@ -526,6 +536,18 @@
     chapterSearch.addEventListener('input', () => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => renderChapters(1), 300);
+    });
+
+    // Event delegation for chapter download buttons
+    chapterList.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chapter-download-btn');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const chapterId = parseInt(btn.dataset.chapterId);
+      if (chapterId && typeof DownloadManager !== 'undefined') {
+        DownloadManager.downloadChapter(chapterId, window._downloadNovelTitle, window._downloadChapters);
+      }
     });
   }
 

@@ -6,7 +6,7 @@
   <title>Profile - Lumina Script</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20260727h">
+  <link rel="stylesheet" href="css/styles.css?v=20260727i">
   <link rel="stylesheet" href="css/themes.css?v=20260727d">
   <style>
     .profile-header {
@@ -225,6 +225,7 @@
   </style>
 </head>
 <body data-page="profile">
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
   <div class="app-layout">
     <aside class="sidebar">
       <a href="/" class="sidebar-logo">
@@ -263,7 +264,7 @@
       </div>
     </header>
 
-    <main class="main-content" id="profile-content">
+    <main class="main-content" id="main-content">
       <!-- Loaded by JS -->
     </main>
 
@@ -274,13 +275,13 @@
   <script src="js/config.js?v=20260727"></script>
   <script src="js/storage.js?v=20260727"></script>
   <script src="js/nav.js?v=20260727"></script>
-  <script src="js/utils.js?v=20260727"></script>
+  <script src="js/utils.js?v=20260727i"></script>
   <script src="js/themes.js?v=20260727"></script>
   <script src="js/animations.js?v=20260727"></script>
   <script src="js/streaks.js?v=20260727"></script>
   <script src="js/achievements.js?v=20260727"></script>
   <script>
-    const content = document.getElementById('profile-content');
+    const content = document.getElementById('main-content');
 
     async function renderProfile() {
       const user = Storage.getCurrentUser();

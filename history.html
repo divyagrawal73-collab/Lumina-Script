@@ -6,7 +6,7 @@
   <title>Reading History - Lumina Script</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20260727h">
+  <link rel="stylesheet" href="css/styles.css?v=20260727i">
   <link rel="stylesheet" href="css/themes.css?v=20260727d">
   <style>
     .history-item {
@@ -54,6 +54,7 @@
   </style>
 </head>
 <body data-page="history">
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
   <div class="app-layout">
     <aside class="sidebar">
       <a href="/" class="sidebar-logo">
@@ -92,7 +93,7 @@
       </div>
     </header>
 
-    <main class="main-content" id="history-content"></main>
+    <main class="main-content" id="main-content"></main>
 
     <nav class="bottomnav"></nav>
   </div>
@@ -101,11 +102,11 @@
   <script src="js/config.js?v=20260727"></script>
   <script src="js/storage.js?v=20260727"></script>
   <script src="js/nav.js?v=20260727"></script>
-  <script src="js/utils.js?v=20260727"></script>
+  <script src="js/utils.js?v=20260727i"></script>
   <script src="js/themes.js?v=20260727"></script>
   <script src="js/animations.js?v=20260727"></script>
   <script>
-    const content = document.getElementById('history-content');
+    const content = document.getElementById('main-content');
 
     async function renderHistory() {
       const user = Storage.getCurrentUser();
@@ -122,17 +123,18 @@
         return;
       }
 
-      const history = await Storage.getReadingHistory();
+      const progress = await Storage.getAllReadingProgress();
+      const progressIds = Object.keys(progress).filter(id => progress[id].lastReadChapter);
 
       content.innerHTML = `
         <div class="page-header">
           <h1 class="page-title">Reading History</h1>
-          <p class="page-subtitle">${history.length} novel${history.length !== 1 ? 's' : ''} read</p>
+          <p class="page-subtitle">${progressIds.length} novel${progressIds.length !== 1 ? 's' : ''} read</p>
         </div>
         <div id="history-list"></div>
       `;
 
-      if (history.length === 0) {
+      if (progressIds.length === 0) {
         document.getElementById('history-list').innerHTML = `
           <div class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -145,27 +147,33 @@
         return;
       }
 
-      fetch('/data/novels.json?v=20260727')
+      fetch('/data/novels.json?v=20260727h')
         .then(r => r.json())
-        .then(async (novels) => {
-          const items = await Promise.all(history.map(async (h) => {
-            const novelId = h.novel_id || h.novelId;
-            const chapterId = h.chapter_id || h.chapterId;
-            const readAt = h.read_at || h.readAt;
-            const novel = novels.find(n => n.id === novelId);
+        .then((novels) => {
+          // Sort by most recently read
+          progressIds.sort((a, b) => {
+            const timeA = progress[a].lastReadAt || '';
+            const timeB = progress[b].lastReadAt || '';
+            return timeB.localeCompare(timeA);
+          });
+
+          const items = progressIds.map(id => {
+            const p = progress[id];
+            const novel = novels.find(n => n.id === id);
             if (!novel) return '';
-            const totalChapters = novel.chapters ? novel.chapters.length : 0;
+            const totalChapters = novel.chapterCount || 0;
+            const readAt = p.lastReadAt || '';
             return `
-              <a href="/reader.html?novel=${novelId}&chapter=${chapterId}" class="history-item">
+              <a href="/reader.html?novel=${id}&chapter=${p.lastReadChapter}" class="history-item">
                 <img class="history-cover" src="${novel.cover}" alt="${novel.title}" onerror="this.style.display='none'">
                 <div class="history-info">
                   <div class="history-title">${novel.title}</div>
-                  <div class="history-meta">Chapter ${chapterId} of ${totalChapters} read</div>
+                  <div class="history-meta">Chapter ${p.lastReadChapter} of ${totalChapters}</div>
                 </div>
-                <span class="history-time">${timeAgo(readAt)}</span>
+                <span class="history-time">${typeof timeAgo === 'function' ? timeAgo(readAt) : ''}</span>
               </a>
             `;
-          }));
+          });
           document.getElementById('history-list').innerHTML = items.join('');
         });
     }

@@ -25,7 +25,7 @@ function renderNav(currentPage) {
       <div class="sidebar-user-info">
         <span class="sidebar-username">${username}</span>
       </div>
-      <button class="sidebar-logout" onclick="handleLogout()" title="Logout">
+      <button class="sidebar-logout" onclick="handleLogout()" title="Logout" aria-label="Logout">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
@@ -111,3 +111,31 @@ document.addEventListener('click', (e) => {
     if (overlay) overlay.classList.remove('active');
   }
 });
+
+// Swipe-to-close on sidebar for touch devices
+(function() {
+  let startX = 0;
+  let swiping = false;
+
+  document.addEventListener('touchstart', (e) => {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar && sidebar.classList.contains('open')) {
+      startX = e.touches[0].clientX;
+      swiping = true;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!swiping) return;
+    const diff = e.touches[0].clientX - startX;
+    if (diff < -50) {
+      swiping = false;
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      if (sidebar) sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('active');
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => { swiping = false; }, { passive: true });
+})();

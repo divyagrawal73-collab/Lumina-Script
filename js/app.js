@@ -51,37 +51,47 @@
   }
 
   async function renderContinueReading() {
-    const [progress, history] = await Promise.all([
-      Storage.getAllReadingProgress(),
-      Storage.getReadingHistory()
-    ]);
+    const progress = await Storage.getAllReadingProgress();
 
-    if (history.length === 0) {
+    const progressIds = Object.keys(progress);
+    if (progressIds.length === 0) {
+      continueReadingSection.classList.add('hidden');
+      return;
+    }
+
+    // Find the most recently read novel using lastReadAt from progress
+    let bestId = null;
+    let bestTime = '';
+    for (const id of progressIds) {
+      const p = progress[id];
+      if (!p.lastReadChapter) continue;
+      if (!novels.find(n => n.id === id)) continue;
+      if (p.lastReadAt > bestTime) {
+        bestTime = p.lastReadAt;
+        bestId = id;
+      }
+    }
+
+    if (!bestId) {
       continueReadingSection.classList.add('hidden');
       return;
     }
 
     continueReadingSection.classList.remove('hidden');
 
-    const lastNovelId = history[0].novel_id;
-    const novelProgress = progress[lastNovelId];
-    const novel = novels.find(n => n.id === lastNovelId);
-
-    if (!novel || !novelProgress.lastReadChapter) {
-      continueReadingSection.classList.add('hidden');
-      return;
-    }
-
+    const novel = novels.find(n => n.id === bestId);
+    const novelProgress = progress[bestId];
     const readCount = novelProgress.chaptersRead ? novelProgress.chaptersRead.length : 0;
-    const progressPercent = novel.chapterCount > 0 ? (readCount / novel.chapterCount) * 100 : 0;
+    const totalChapters = novel.chapterCount || 1;
+    const progressPercent = Math.min(100, (readCount / totalChapters) * 100);
 
     heroCardContainer.innerHTML = `
-      <a href="/novel.html?id=${novel.id}" class="hero-card">
+      <a href="/reader.html?novel=${novel.id}&chapter=${novelProgress.lastReadChapter}" class="hero-card">
         <img src="${novel.cover}" alt="${escapeHtml(novel.title)}" class="hero-cover" onerror="this.style.background='var(--primary-light)'">
         <div class="hero-info">
           <div class="hero-label">Continue Reading</div>
           <div class="hero-title">${escapeHtml(novel.title)}</div>
-          <div class="hero-meta">Chapter ${novelProgress.lastReadChapter} of ${novel.chapterCount}</div>
+          <div class="hero-meta">Chapter ${novelProgress.lastReadChapter} of ${totalChapters}</div>
           <div class="hero-progress">
             <div class="hero-progress-bar" style="width: ${progressPercent}%"></div>
           </div>
