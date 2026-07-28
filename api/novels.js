@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
         'User-Agent': 'LuminaScript/1.0',
         'Accept': 'application/json'
       },
-      signal: AbortSignal.timeout(15000)
+      signal: AbortSignal.timeout(30000)
     });
 
     if (!response.ok) {
