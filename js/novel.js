@@ -36,8 +36,32 @@
 
   async function loadNovel(novelId) {
     try {
+      // Try local featured novels first
       const novels = await Fetcher.getNovels();
-      novelData = novels.find(n => n.id === novelId);
+      novelData = novels.find(n => n.id === novelId || n.apiId === novelId);
+
+      // If not found locally, fetch from API
+      if (!novelData) {
+        try {
+          const res = await fetch(`/api/proxy/novel/${novelId}`);
+          if (res.ok) {
+            const data = await res.json();
+            const n = data.novel || data;
+            novelData = {
+              id: n.id || novelId,
+              apiId: n.id || novelId,
+              title: n.title,
+              author: n.author,
+              cover: n.cover_url || n.image_url || n.novel_image,
+              description: (n.description || '').slice(0, 1000),
+              chapterCount: parseInt(n.total_chapters) || 0,
+              tags: n.genres ? n.genres.split(',').map(g => g.trim()).filter(Boolean) : []
+            };
+          }
+        } catch (e) {
+          console.warn('Failed to fetch novel from API:', e);
+        }
+      }
       
       if (!novelData) {
         window.location.href = '/';
