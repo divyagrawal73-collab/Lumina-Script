@@ -47,12 +47,14 @@
           if (res.ok) {
             const data = await res.json();
             const n = data.novel || data;
+            const coverPath = n.cover_url || n.image_url || n.novel_image || '';
+            const cover = coverPath.startsWith('http') ? coverPath : `https://novelarchive.cc${coverPath}`;
             novelData = {
               id: n.id || novelId,
               apiId: n.id || novelId,
               title: n.title,
               author: n.author,
-              cover: n.cover_url || n.image_url || n.novel_image,
+              cover,
               description: (n.description || '').slice(0, 1000),
               chapterCount: parseInt(n.total_chapters) || 0,
               tags: n.genres ? n.genres.split(',').map(g => g.trim()).filter(Boolean) : []

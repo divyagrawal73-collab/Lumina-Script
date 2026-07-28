@@ -38,18 +38,22 @@ module.exports = async (req, res) => {
     const data = await response.json();
 
     // Normalize: map API novels to our format
-    const novels = (data.novels || []).map(n => ({
-      id: n.id,
-      apiId: n.id,
-      title: n.title,
-      author: n.author,
-      cover: n.cover_url || n.image_url || n.novel_image,
-      description: (n.description || '').slice(0, 500),
-      chapterCount: parseInt(n.total_chapters) || 0,
-      tags: n.genres ? n.genres.split(',').map(g => g.trim()).filter(Boolean) : [],
-      status: n.release_status || n.ongoing || 'unknown',
-      views: n.views_number || 0
-    }));
+    const novels = (data.novels || []).map(n => {
+      const coverPath = n.cover_url || n.image_url || n.novel_image || '';
+      const cover = coverPath.startsWith('http') ? coverPath : `https://novelarchive.cc${coverPath}`;
+      return {
+        id: n.id,
+        apiId: n.id,
+        title: n.title,
+        author: n.author,
+        cover,
+        description: (n.description || '').slice(0, 500),
+        chapterCount: parseInt(n.total_chapters) || 0,
+        tags: n.genres ? n.genres.split(',').map(g => g.trim()).filter(Boolean) : [],
+        status: n.release_status || n.ongoing || 'unknown',
+        views: n.views_number || 0
+      };
+    });
 
     return res.status(200).json({
       novels,

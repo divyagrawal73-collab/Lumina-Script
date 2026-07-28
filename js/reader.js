@@ -84,9 +84,29 @@
     } catch (e) {
       console.warn('Local novel data not found, will use API');
     }
-    // For API novels not in local list, create minimal metadata
+    // For API novels not in local list, fetch metadata from API
+    if (!novelData || !novelData.title) {
+      try {
+        const res = await fetch(`/api/proxy/novel/${novelId}`);
+        if (res.ok) {
+          const data = await res.json();
+          const n = data.novel || data;
+          const coverPath = n.cover_url || n.image_url || n.novel_image || '';
+          const cover = coverPath.startsWith('http') ? coverPath : `https://novelarchive.cc${coverPath}`;
+          novelData = {
+            id: n.id || novelId,
+            apiId: n.id || novelId,
+            title: n.title || 'Unknown',
+            author: n.author || 'Unknown',
+            cover
+          };
+        }
+      } catch (e) {
+        console.warn('Failed to fetch novel from API:', e);
+      }
+    }
     if (!novelData) {
-      novelData = { id: novelId, apiId: novelId, title: 'Loading...' };
+      novelData = { id: novelId, apiId: novelId, title: 'Loading...', cover: '' };
     }
   }
 
@@ -117,14 +137,37 @@
     // Fetch content from API
     elements.chapterContent.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading chapter content...</p></div>';
     let content = null;
-    if (typeof Fetcher !== 'undefined' && Fetcher.getChapter) {
-      const result = await Fetcher.getChapter(novelId, chapterId);
-      if (result) {
-        content = result.content;
+    try {
+      if (typeof Fetcher !== 'undefined' && Fetcher.getChapter) {
+        const result = await Fetcher.getChapter(novelId, chapterId);
+        if (result && result.content) {
+          content = result.content;
+        }
+      }
+    } catch (e) {
+      console.warn('Fetcher.getChapter failed:', e);
+    }
+    if (!content) {
+      try {
+        if (typeof Fetcher !== 'undefined' && Fetcher.getChapterContent) {
+          content = await Fetcher.getChapterContent(novelId, chapterId);
+        }
+      } catch (e) {
+        console.warn('Fetcher.getChapterContent failed:', e);
       }
     }
-    if (!content && typeof Fetcher !== 'undefined' && Fetcher.getChapterContent) {
-      content = await Fetcher.getChapterContent(novelId, chapterId);
+    // Last resort: direct fetch
+    if (!content) {
+      try {
+        const apiId = novelData?.apiId || novelId;
+        const res = await fetch(`/api/proxy/novel/${apiId}/chapter/${chapterId}`);
+        if (res.ok) {
+          const data = await res.json();
+          content = data.chapter?.content || data.content || '';
+        }
+      } catch (e) {
+        console.warn('Direct chapter fetch failed:', e);
+      }
     }
     if (!content) {
       elements.chapterContent.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--on-surface-secondary);">Failed to load chapter content. Please try again.</p>';
