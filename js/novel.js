@@ -36,9 +36,7 @@
 
   async function loadNovel(novelId) {
     try {
-      const response = await fetch('/data/novels.json?v=20260727b');
-      if (!response.ok) throw new Error('Failed to load novels');
-      const novels = await response.json();
+      const novels = await Fetcher.getNovels();
       novelData = novels.find(n => n.id === novelId);
       
       if (!novelData) {
@@ -62,11 +60,8 @@
   }
 
   async function loadChapters(novelId) {
-    const url = `/data/${novelId}/chapters.json?v=20260727`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Failed to load chapters');
-    chapters = await response.json();
-
+    const result = await Fetcher.getChapterList(novelId);
+    chapters = result.chapters;
   }
 
   async function renderHeader() {

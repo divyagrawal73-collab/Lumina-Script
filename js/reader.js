@@ -84,15 +84,11 @@
   }
 
   async function loadChapters() {
-    const response = await fetch(`/data/${novelId}/chapters.json?v=20260727`);
-    if (!response.ok) throw new Error('Failed to load chapters');
-    chapters = await response.json();
+    const result = await Fetcher.getChapterList(novelId);
+    chapters = result.chapters;
   }
 
   async function loadChapter(chapterId) {
-    const chapter = chapters.find(c => c.id === chapterId);
-    if (!chapter) return;
-
     if (typeof TTS !== 'undefined') TTS.onChapterChange();
 
     if (novelId && currentChapterId && currentChapterId !== chapterId) {
@@ -101,17 +97,28 @@
 
     const startTime = Date.now();
     currentChapterId = chapterId;
-    elements.chapterTitle.textContent = chapter.title;
-    document.title = `${chapter.title} - Lumina Script`;
 
-    let content = chapter.content;
-    if (!content && typeof Fetcher !== 'undefined' && Fetcher.getChapterContent) {
-      elements.chapterContent.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading chapter content...</p></div>';
-      content = await Fetcher.getChapterContent(novelId, chapterId);
-      if (!content) {
-        elements.chapterContent.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--on-surface-secondary);">Failed to load chapter content. Please try again.</p>';
-        return;
+    // Get chapter title from list
+    const chapterInfo = chapters.find(c => c.id === chapterId);
+    const title = chapterInfo?.title || `Chapter ${chapterId}`;
+    elements.chapterTitle.textContent = title;
+    document.title = `${title} - Lumina Script`;
+
+    // Fetch content from API
+    elements.chapterContent.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading chapter content...</p></div>';
+    let content = null;
+    if (typeof Fetcher !== 'undefined' && Fetcher.getChapter) {
+      const result = await Fetcher.getChapter(novelId, chapterId);
+      if (result) {
+        content = result.content;
       }
+    }
+    if (!content && typeof Fetcher !== 'undefined' && Fetcher.getChapterContent) {
+      content = await Fetcher.getChapterContent(novelId, chapterId);
+    }
+    if (!content) {
+      elements.chapterContent.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--on-surface-secondary);">Failed to load chapter content. Please try again.</p>';
+      return;
     }
 
     const paragraphs = content.split('\n').filter(p => p.trim());

@@ -3,7 +3,7 @@
 const Fetcher = {
   _novelsMeta: null,
   _chapterListCache: new Map(),
-  _CACHE_TTL: 5 * 60 * 1000, // 5 minutes
+  _CACHE_TTL: 5 * 60 * 1000,
 
   async getNovels() {
     if (this._novelsMeta) return this._novelsMeta;
@@ -24,6 +24,14 @@ const Fetcher = {
     return novel?.apiId || novelId;
   },
 
+  // Normalize API chapter_names into [{id, title}] format
+  _normalizeChapters(chapterNames) {
+    return chapterNames.map((name, i) => ({
+      id: i + 1,
+      title: name
+    }));
+  },
+
   async getChapterList(novelId) {
     const cached = this._chapterListCache.get(novelId);
     if (cached && (Date.now() - cached.timestamp) < this._CACHE_TTL) {
@@ -35,7 +43,17 @@ const Fetcher = {
       const res = await fetch(`/api/proxy/novel/${apiId}`);
       if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
-      const chapters = Array.isArray(data) ? data : (data.chapters || []);
+
+      // API returns { novel: { chapter_names: [...] } }
+      let chapters = [];
+      if (data.novel?.chapter_names) {
+        chapters = this._normalizeChapters(data.novel.chapter_names);
+      } else if (Array.isArray(data)) {
+        chapters = data;
+      } else if (data.chapters) {
+        chapters = data.chapters;
+      }
+
       this._chapterListCache.set(novelId, { chapters, timestamp: Date.now() });
       return { chapters, source: 'api' };
     } catch (e) {
@@ -50,7 +68,14 @@ const Fetcher = {
       const res = await fetch(`/api/proxy/novel/${apiId}/chapter/${chapterId}`);
       if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
-      return { ...data, source: 'api' };
+      // API returns { chapter: { number, name, content } }
+      const ch = data.chapter || data;
+      return {
+        id: ch.number || parseInt(chapterId),
+        title: ch.name || ch.title || `Chapter ${chapterId}`,
+        content: ch.content || ch.chapter_content || '',
+        source: 'api'
+      };
     } catch (e) {
       console.error(`Failed to fetch chapter ${chapterId} for ${novelId}:`, e);
       return null;
