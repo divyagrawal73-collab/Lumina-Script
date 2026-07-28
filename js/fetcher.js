@@ -1,20 +1,14 @@
-// js/fetcher.js - Hybrid data fetcher (static JSON + API proxy fallback)
+// js/fetcher.js - API-only data fetcher with in-memory caching
 
 const Fetcher = {
   _novelsMeta: null,
-  _localNovelIds: ['sky-pride', 'shadow-slave', 'swallowed-star', 'lord-of-the-mysteries', 'warlock-of-the-magus-world', 'swallowed-star-2', 'swallowed-star-2-origin-continent'],
-  _apiNovelIds: {
-    'lord-of-the-mysteries': '69faadd3a5f4c7d1b734d49f',
-    'warlock-of-the-magus-world': '6a163d1a4f942c668d69a5b4',
-    'swallowed-star-2': '69ff4ce4a5f4c7d1b734e1dc',
-    'swallowed-star-2-origin-continent': '69ff4ce4a5f4c7d1b734e1dc'
-  },
+  _chapterListCache: new Map(),
+  _CACHE_TTL: 5 * 60 * 1000, // 5 minutes
 
-  // Load novels metadata from static file
   async getNovels() {
     if (this._novelsMeta) return this._novelsMeta;
     try {
-      const res = await fetch('/data/novels.json?v=20260727b');
+      const res = await fetch('/data/novels.json?v=20260728');
       if (!res.ok) throw new Error('Failed to load novels');
       this._novelsMeta = await res.json();
       return this._novelsMeta;
@@ -24,28 +18,25 @@ const Fetcher = {
     }
   },
 
-  // Get chapter list: try local static first, then API proxy
+  async _getApiId(novelId) {
+    const novels = await this.getNovels();
+    const novel = novels.find(n => n.id === novelId);
+    return novel?.apiId || novelId;
+  },
+
   async getChapterList(novelId) {
-    // Check if we have a local static file
-    if (this._localNovelIds.includes(novelId)) {
-      try {
-        const res = await fetch(`/data/${novelId}/chapters.json?v=20260727`);
-        if (res.ok) {
-          const chapters = await res.json();
-          return { chapters, source: 'static' };
-        }
-      } catch (e) {
-        console.warn(`Static file missing for ${novelId}, falling back to API`);
-      }
+    const cached = this._chapterListCache.get(novelId);
+    if (cached && (Date.now() - cached.timestamp) < this._CACHE_TTL) {
+      return { chapters: cached.chapters, source: 'cache' };
     }
 
-    // Fallback to API proxy
+    const apiId = await this._getApiId(novelId);
     try {
-      const res = await fetch(`/api/proxy/novel/${novelId}`);
+      const res = await fetch(`/api/proxy/novel/${apiId}`);
       if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
-      // Normalize: API returns { chapters: [...] } or just [...]
       const chapters = Array.isArray(data) ? data : (data.chapters || []);
+      this._chapterListCache.set(novelId, { chapters, timestamp: Date.now() });
       return { chapters, source: 'api' };
     } catch (e) {
       console.error(`Failed to fetch chapter list for ${novelId}:`, e);
@@ -53,26 +44,10 @@ const Fetcher = {
     }
   },
 
-  // Get single chapter content: try local cache first, then API proxy
   async getChapter(novelId, chapterId) {
-    // For local novels, chapter content is embedded in the chapters.json
-    // We need to extract it from the full chapter list
-    if (this._localNovelIds.includes(novelId)) {
-      try {
-        const res = await fetch(`/data/${novelId}/chapters.json?v=20260727`);
-        if (res.ok) {
-          const chapters = await res.json();
-          const chapter = chapters.find(c => c.id === parseInt(chapterId) || c.id === chapterId);
-          if (chapter) return { ...chapter, source: 'static' };
-        }
-      } catch (e) {
-        console.warn(`Local chapter not found for ${novelId} ch.${chapterId}`);
-      }
-    }
-
-    // Fallback to API proxy
+    const apiId = await this._getApiId(novelId);
     try {
-      const res = await fetch(`/api/proxy/novel/${novelId}/chapter/${chapterId}`);
+      const res = await fetch(`/api/proxy/novel/${apiId}/chapter/${chapterId}`);
       if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
       return { ...data, source: 'api' };
@@ -82,16 +57,12 @@ const Fetcher = {
     }
   },
 
-  // Get chapter content on-demand (for novels with only titles stored locally)
   async getChapterContent(novelId, chapterId) {
-    const apiId = this._apiNovelIds[novelId];
-    if (!apiId) return null;
-
+    const apiId = await this._getApiId(novelId);
     try {
       const res = await fetch(`/api/proxy/novel/${apiId}/chapter/${chapterId}`);
       if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
-      // API returns { novel: {...}, chapter: { number, name, content } }
       return data.chapter?.content || data.content || data.chapter_content || '';
     } catch (e) {
       console.error(`Failed to fetch chapter content for ${novelId} ch.${chapterId}:`, e);
